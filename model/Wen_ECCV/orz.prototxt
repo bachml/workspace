@@ -14,7 +14,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/webface_112x96_train_lmdb"
+   source: "webface_112x96_train_lmdb"
    backend: LMDB
    batch_size : 64
   }
@@ -35,7 +35,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/webface_112x96_val_lmdb"
+   source: "webface_112x96_val_lmdb"
    backend: LMDB
    batch_size : 20
   }
@@ -100,9 +100,9 @@ layer {
   }
 }
 layer {
-  name: "conv_dw2_1"
+  name: "conv2_1"
   bottom: "pool1b"
-  top: "conv_dw2_1"
+  top: "conv2_1"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -111,30 +111,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 64
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU2_1"
-  bottom: "conv_dw2_1"
-  top: "conv_dw2_1"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw2_1"
-  bottom: "conv_dw2_1"
-  top: "conv_pw2_1"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 64
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -143,14 +119,14 @@ layer {
 }
 layer {
   name: "PReLU2_1"
-  bottom: "conv_pw2_1"
-  top: "conv_pw2_1"
+  bottom: "conv2_1"
+  top: "conv2_1"
   type: "PReLU"
 }
 layer {
-  name: "conv_dw2_2"
-  bottom: "conv_pw2_1"
-  top: "conv_dw2_2"
+  name: "conv2_2"
+  bottom: "conv2_1"
+  top: "conv2_2"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -159,30 +135,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 64
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU2_2"
-  bottom: "conv_dw2_2"
-  top: "conv_dw2_2"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw2_2"
-  bottom: "conv_dw2_2"
-  top: "conv_pw2_2"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 64
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -191,14 +143,14 @@ layer {
 }
 layer {
   name: "PReLU2_2"
-  bottom: "conv_pw2_2"
-  top: "conv_pw2_2"
+  bottom: "conv2_2"
+  top: "conv2_2"
   type: "PReLU"
 }
 layer {
   name: "eltwise2_2"
   bottom: "pool1b"
-  bottom: "conv_pw2_2"
+  bottom: "conv2_2"
   top: "eltwise2_2"
   type: "Eltwise"
   eltwise_param {
@@ -241,9 +193,9 @@ layer {
   }
 }
 layer {
-  name: "conv_dw3_1"
+  name: "conv3_1"
   bottom: "pool2"
-  top: "conv_dw3_1"
+  top: "conv3_1"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -252,30 +204,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 128
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU3_1"
-  bottom: "conv_dw3_1"
-  top: "conv_dw3_1"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw3_1"
-  bottom: "conv_dw3_1"
-  top: "conv_pw3_1"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 128
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -284,14 +212,14 @@ layer {
 }
 layer {
   name: "PReLU3_1"
-  bottom: "conv_pw3_1"
-  top: "conv_pw3_1"
+  bottom: "conv3_1"
+  top: "conv3_1"
   type: "PReLU"
 }
 layer {
-  name: "conv_dw3_2"
-  bottom: "conv_pw3_1"
-  top: "conv_dw3_2"
+  name: "conv3_2"
+  bottom: "conv3_1"
+  top: "conv3_2"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -300,30 +228,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 128
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU3_2"
-  bottom: "conv_dw3_2"
-  top: "conv_dw3_2"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw3_2"
-  bottom: "conv_dw3_2"
-  top: "conv_pw3_2"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 128
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -332,14 +236,14 @@ layer {
 }
 layer {
   name: "PReLU3_2"
-  bottom: "conv_pw3_2"
-  top: "conv_pw3_2"
+  bottom: "conv3_2"
+  top: "conv3_2"
   type: "PReLU"
 }
 layer {
   name: "eltwise3_2"
   bottom: "pool2"
-  bottom: "conv_pw3_2"
+  bottom: "conv3_2"
   top: "eltwise3_2"
   type: "Eltwise"
   eltwise_param {
@@ -347,9 +251,9 @@ layer {
   }
 }
 layer {
-  name: "conv_dw3_3"
+  name: "conv3_3"
   bottom: "eltwise3_2"
-  top: "conv_dw3_3"
+  top: "conv3_3"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -358,30 +262,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 128
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU3_3"
-  bottom: "conv_dw3_3"
-  top: "conv_dw3_3"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw3_3"
-  bottom: "conv_dw3_3"
-  top: "conv_pw3_3"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 128
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -390,14 +270,14 @@ layer {
 }
 layer {
   name: "PReLU3_3"
-  bottom: "conv_pw3_3"
-  top: "conv_pw3_3"
+  bottom: "conv3_3"
+  top: "conv3_3"
   type: "PReLU"
 }
 layer {
-  name: "conv_dw3_4"
-  bottom: "conv_pw3_3"
-  top: "conv_dw3_4"
+  name: "conv3_4"
+  bottom: "conv3_3"
+  top: "conv3_4"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -406,30 +286,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 128
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU3_4"
-  bottom: "conv_dw3_4"
-  top: "conv_dw3_4"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw3_4"
-  bottom: "conv_dw3_4"
-  top: "conv_pw3_4"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 128
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -438,14 +294,14 @@ layer {
 }
 layer {
   name: "PReLU3_4"
-  bottom: "conv_pw3_4"
-  top: "conv_pw3_4"
+  bottom: "conv3_4"
+  top: "conv3_4"
   type: "PReLU"
 }
 layer {
   name: "eltwise3_4"
   bottom: "eltwise3_2"
-  bottom: "conv_pw3_4"
+  bottom: "conv3_4"
   top: "eltwise3_4"
   type: "Eltwise"
   eltwise_param {
@@ -488,9 +344,9 @@ layer {
   }
 }
 layer {
-  name: "conv_dw4_1"
+  name: "conv4_1"
   bottom: "pool3"
-  top: "conv_dw4_1"
+  top: "conv4_1"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -499,30 +355,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 256
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU4_1"
-  bottom: "conv_dw4_1"
-  top: "conv_dw4_1"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw4_1"
-  bottom: "conv_dw4_1"
-  top: "conv_pw4_1"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 256
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -531,14 +363,14 @@ layer {
 }
 layer {
   name: "PReLU4_1"
-  bottom: "conv_pw4_1"
-  top: "conv_pw4_1"
+  bottom: "conv4_1"
+  top: "conv4_1"
   type: "PReLU"
 }
 layer {
-  name: "conv_dw4_2"
-  bottom: "conv_pw4_1"
-  top: "conv_dw4_2"
+  name: "conv4_2"
+  bottom: "conv4_1"
+  top: "conv4_2"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -547,30 +379,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 256
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU4_2"
-  bottom: "conv_dw4_2"
-  top: "conv_dw4_2"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw4_2"
-  bottom: "conv_dw4_2"
-  top: "conv_pw4_2"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 256
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -579,14 +387,14 @@ layer {
 }
 layer {
   name: "PReLU4_2"
-  bottom: "conv_pw4_2"
-  top: "conv_pw4_2"
+  bottom: "conv4_2"
+  top: "conv4_2"
   type: "PReLU"
 }
 layer {
   name: "eltwise4_2"
   bottom: "pool3"
-  bottom: "conv_pw4_2"
+  bottom: "conv4_2"
   top: "eltwise4_2"
   type: "Eltwise"
   eltwise_param {
@@ -594,9 +402,9 @@ layer {
   }
 }
 layer {
-  name: "conv_dw4_3"
+  name: "conv4_3"
   bottom: "eltwise4_2"
-  top: "conv_dw4_3"
+  top: "conv4_3"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -605,30 +413,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 256
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU4_3"
-  bottom: "conv_dw4_3"
-  top: "conv_dw4_3"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw4_3"
-  bottom: "conv_dw4_3"
-  top: "conv_pw4_3"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 256
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -637,14 +421,14 @@ layer {
 }
 layer {
   name: "PReLU4_3"
-  bottom: "conv_pw4_3"
-  top: "conv_pw4_3"
+  bottom: "conv4_3"
+  top: "conv4_3"
   type: "PReLU"
 }
 layer {
-  name: "conv_dw4_4"
-  bottom: "conv_pw4_3"
-  top: "conv_dw4_4"
+  name: "conv4_4"
+  bottom: "conv4_3"
+  top: "conv4_4"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -653,30 +437,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 256
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU4_4"
-  bottom: "conv_dw4_4"
-  top: "conv_dw4_4"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw4_4"
-  bottom: "conv_dw4_4"
-  top: "conv_pw4_4"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 256
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -685,14 +445,14 @@ layer {
 }
 layer {
   name: "PReLU4_4"
-  bottom: "conv_pw4_4"
-  top: "conv_pw4_4"
+  bottom: "conv4_4"
+  top: "conv4_4"
   type: "PReLU"
 }
 layer {
   name: "eltwise4_4"
   bottom: "eltwise4_2"
-  bottom: "conv_pw4_4"
+  bottom: "conv4_4"
   top: "eltwise4_4"
   type: "Eltwise"
   eltwise_param {
@@ -700,9 +460,9 @@ layer {
   }
 }
 layer {
-  name: "conv_dw4_5"
+  name: "conv4_5"
   bottom: "eltwise4_4"
-  top: "conv_dw4_5"
+  top: "conv4_5"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -711,30 +471,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 256
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU4_5"
-  bottom: "conv_dw4_5"
-  top: "conv_dw4_5"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw4_5"
-  bottom: "conv_dw4_5"
-  top: "conv_pw4_5"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 256
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -743,14 +479,14 @@ layer {
 }
 layer {
   name: "PReLU4_5"
-  bottom: "conv_pw4_5"
-  top: "conv_pw4_5"
+  bottom: "conv4_5"
+  top: "conv4_5"
   type: "PReLU"
 }
 layer {
-  name: "conv_dw4_6"
-  bottom: "conv_pw4_5"
-  top: "conv_dw4_6"
+  name: "conv4_6"
+  bottom: "conv4_5"
+  top: "conv4_6"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -759,30 +495,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 256
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU4_6"
-  bottom: "conv_dw4_6"
-  top: "conv_dw4_6"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw4_6"
-  bottom: "conv_dw4_6"
-  top: "conv_pw4_6"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 256
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -791,14 +503,14 @@ layer {
 }
 layer {
   name: "PReLU4_6"
-  bottom: "conv_pw4_6"
-  top: "conv_pw4_6"
+  bottom: "conv4_6"
+  top: "conv4_6"
   type: "PReLU"
 }
 layer {
   name: "eltwise4_6"
   bottom: "eltwise4_4"
-  bottom: "conv_pw4_6"
+  bottom: "conv4_6"
   top: "eltwise4_6"
   type: "Eltwise"
   eltwise_param {
@@ -806,9 +518,9 @@ layer {
   }
 }
 layer {
-  name: "conv_dw4_7"
+  name: "conv4_7"
   bottom: "eltwise4_6"
-  top: "conv_dw4_7"
+  top: "conv4_7"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -817,30 +529,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 256
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU4_7"
-  bottom: "conv_dw4_7"
-  top: "conv_dw4_7"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw4_7"
-  bottom: "conv_dw4_7"
-  top: "conv_pw4_7"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 256
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -849,14 +537,14 @@ layer {
 }
 layer {
   name: "PReLU4_7"
-  bottom: "conv_pw4_7"
-  top: "conv_pw4_7"
+  bottom: "conv4_7"
+  top: "conv4_7"
   type: "PReLU"
 }
 layer {
-  name: "conv_dw4_8"
-  bottom: "conv_pw4_7"
-  top: "conv_dw4_8"
+  name: "conv4_8"
+  bottom: "conv4_7"
+  top: "conv4_8"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -865,30 +553,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 256
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU4_8"
-  bottom: "conv_dw4_8"
-  top: "conv_dw4_8"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw4_8"
-  bottom: "conv_dw4_8"
-  top: "conv_pw4_8"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 256
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -897,14 +561,14 @@ layer {
 }
 layer {
   name: "PReLU4_8"
-  bottom: "conv_pw4_8"
-  top: "conv_pw4_8"
+  bottom: "conv4_8"
+  top: "conv4_8"
   type: "PReLU"
 }
 layer {
   name: "eltwise4_8"
   bottom: "eltwise4_6"
-  bottom: "conv_pw4_8"
+  bottom: "conv4_8"
   top: "eltwise4_8"
   type: "Eltwise"
   eltwise_param {
@@ -912,9 +576,9 @@ layer {
   }
 }
 layer {
-  name: "conv_dw4_9"
+  name: "conv4_9"
   bottom: "eltwise4_8"
-  top: "conv_dw4_9"
+  top: "conv4_9"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -923,30 +587,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 256
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU4_9"
-  bottom: "conv_dw4_9"
-  top: "conv_dw4_9"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw4_9"
-  bottom: "conv_dw4_9"
-  top: "conv_pw4_9"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 256
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -955,14 +595,14 @@ layer {
 }
 layer {
   name: "PReLU4_9"
-  bottom: "conv_pw4_9"
-  top: "conv_pw4_9"
+  bottom: "conv4_9"
+  top: "conv4_9"
   type: "PReLU"
 }
 layer {
-  name: "conv_dw4_10"
-  bottom: "conv_pw4_9"
-  top: "conv_dw4_10"
+  name: "conv4_10"
+  bottom: "conv4_9"
+  top: "conv4_10"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
@@ -971,30 +611,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 256
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU4_10"
-  bottom: "conv_dw4_10"
-  top: "conv_dw4_10"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw4_10"
-  bottom: "conv_dw4_10"
-  top: "conv_pw4_10"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
-  convolution_param {
-    num_output: 256
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -1003,14 +619,14 @@ layer {
 }
 layer {
   name: "PReLU4_10"
-  bottom: "conv_pw4_10"
-  top: "conv_pw4_10"
+  bottom: "conv4_10"
+  top: "conv4_10"
   type: "PReLU"
 }
 layer {
   name: "eltwise4_10"
   bottom: "eltwise4_8"
-  bottom: "conv_pw4_10"
+  bottom: "conv4_10"
   top: "eltwise4_10"
   type: "Eltwise"
   eltwise_param {
@@ -1053,9 +669,9 @@ layer {
   }
 }
 layer {
-  name: "conv_dw5_1"
+  name: "conv5_1"
   bottom: "pool4"
-  top: "conv_dw5_1"
+  top: "conv5_1"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
@@ -1064,30 +680,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 512
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU5_1"
-  bottom: "conv_dw5_1"
-  top: "conv_dw5_1"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw5_1"
-  bottom: "conv_dw5_1"
-  top: "conv_pw5_1"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
-  convolution_param {
-    num_output: 512
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -1096,14 +688,14 @@ layer {
 }
 layer {
   name: "PReLU5_1"
-  bottom: "conv_pw5_1"
-  top: "conv_pw5_1"
+  bottom: "conv5_1"
+  top: "conv5_1"
   type: "PReLU"
 }
 layer {
-  name: "conv_dw5_2"
-  bottom: "conv_pw5_1"
-  top: "conv_dw5_2"
+  name: "conv5_2"
+  bottom: "conv5_1"
+  top: "conv5_2"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
@@ -1112,30 +704,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 512
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU5_2"
-  bottom: "conv_dw5_2"
-  top: "conv_dw5_2"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw5_2"
-  bottom: "conv_dw5_2"
-  top: "conv_pw5_2"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
-  convolution_param {
-    num_output: 512
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -1144,14 +712,14 @@ layer {
 }
 layer {
   name: "PReLU5_2"
-  bottom: "conv_pw5_2"
-  top: "conv_pw5_2"
+  bottom: "conv5_2"
+  top: "conv5_2"
   type: "PReLU"
 }
 layer {
   name: "eltwise5_2"
   bottom: "pool4"
-  bottom: "conv_pw5_2"
+  bottom: "conv5_2"
   top: "eltwise5_2"
   type: "Eltwise"
   eltwise_param {
@@ -1159,9 +727,9 @@ layer {
   }
 }
 layer {
-  name: "conv_dw5_3"
+  name: "conv5_3"
   bottom: "eltwise5_2"
-  top: "conv_dw5_3"
+  top: "conv5_3"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
@@ -1170,30 +738,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 512
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU5_3"
-  bottom: "conv_dw5_3"
-  top: "conv_dw5_3"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw5_3"
-  bottom: "conv_dw5_3"
-  top: "conv_pw5_3"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
-  convolution_param {
-    num_output: 512
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -1202,14 +746,14 @@ layer {
 }
 layer {
   name: "PReLU5_3"
-  bottom: "conv_pw5_3"
-  top: "conv_pw5_3"
+  bottom: "conv5_3"
+  top: "conv5_3"
   type: "PReLU"
 }
 layer {
-  name: "conv_dw5_4"
-  bottom: "conv_pw5_3"
-  top: "conv_dw5_4"
+  name: "conv5_4"
+  bottom: "conv5_3"
+  top: "conv5_4"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
@@ -1218,30 +762,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 512
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU5_4"
-  bottom: "conv_dw5_4"
-  top: "conv_dw5_4"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw5_4"
-  bottom: "conv_dw5_4"
-  top: "conv_pw5_4"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
-  convolution_param {
-    num_output: 512
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -1250,14 +770,14 @@ layer {
 }
 layer {
   name: "PReLU5_4"
-  bottom: "conv_pw5_4"
-  top: "conv_pw5_4"
+  bottom: "conv5_4"
+  top: "conv5_4"
   type: "PReLU"
 }
 layer {
   name: "eltwise5_4"
   bottom: "eltwise5_2"
-  bottom: "conv_pw5_4"
+  bottom: "conv5_4"
   top: "eltwise5_4"
   type: "Eltwise"
   eltwise_param {
@@ -1265,9 +785,9 @@ layer {
   }
 }
 layer {
-  name: "conv_dw5_5"
+  name: "conv5_5"
   bottom: "eltwise5_4"
-  top: "conv_dw5_5"
+  top: "conv5_5"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
@@ -1276,30 +796,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 512
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU5_5"
-  bottom: "conv_dw5_5"
-  top: "conv_dw5_5"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw5_5"
-  bottom: "conv_dw5_5"
-  top: "conv_pw5_5"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
-  convolution_param {
-    num_output: 512
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -1308,14 +804,14 @@ layer {
 }
 layer {
   name: "PReLU5_5"
-  bottom: "conv_pw5_5"
-  top: "conv_pw5_5"
+  bottom: "conv5_5"
+  top: "conv5_5"
   type: "PReLU"
 }
 layer {
-  name: "conv_dw5_6"
-  bottom: "conv_pw5_5"
-  top: "conv_dw5_6"
+  name: "conv5_6"
+  bottom: "conv5_5"
+  top: "conv5_6"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
@@ -1324,30 +820,6 @@ layer {
     kernel_size: 3
     stride: 1
     pad: 1
-    group: 512
-    weight_filler { type: "gaussian" std: 0.010 }
-    bias_filler { type: "constant" value: 0 }
-    engine: CAFFE
-  }
-}
-layer {
-  name: "PReLU5_6"
-  bottom: "conv_dw5_6"
-  top: "conv_dw5_6"
-  type: "PReLU"
-}
-layer {
-  name: "conv_pw5_6"
-  bottom: "conv_dw5_6"
-  top: "conv_pw5_6"
-  type: "Convolution"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
-  convolution_param {
-    num_output: 512
-    kernel_size: 1
-    stride: 1
-    pad: 0
     group: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -1356,14 +828,14 @@ layer {
 }
 layer {
   name: "PReLU5_6"
-  bottom: "conv_pw5_6"
-  top: "conv_pw5_6"
+  bottom: "conv5_6"
+  top: "conv5_6"
   type: "PReLU"
 }
 layer {
   name: "eltwise5_6"
   bottom: "eltwise5_4"
-  bottom: "conv_pw5_6"
+  bottom: "conv5_6"
   top: "eltwise5_6"
   type: "Eltwise"
   eltwise_param {
