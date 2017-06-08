@@ -14,7 +14,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/MsCeleb_256x256_train_lmdb"
+   source: "webface_112x96_train_lmdb"
    backend: LMDB
    batch_size : 64
   }
@@ -35,7 +35,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/MsCeleb_256x256_val_lmdb"
+   source: "webface_112x96_val_lmdb"
    backend: LMDB
    batch_size : 20
   }
@@ -49,9 +49,9 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 32
-    kernel_size: 10
-    stride: 2
-    pad: 4
+    kernel_size: 3
+    stride: 1
+    pad: 1
     group: 1
     weight_filler { type: "xavier" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
@@ -860,10 +860,10 @@ layer {
   type: "InnerProduct"
   bottom: "fc5"
   top: "fc6"
-  param { lr_mult: 1 decay_mult: 10 }
-  param { lr_mult: 2 decay_mult: 10 }
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
-     num_output: 76544
+     num_output: 10572
      weight_filler { type: "xavier" std: 0.010 }
      bias_filler { type: "constant" value: 0 }
   }

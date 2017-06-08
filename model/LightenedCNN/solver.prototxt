@@ -1,0 +1,27 @@
+net: "model/LightenedCNN/trainval.prototxt"
+
+
+
+#batch_size: 20
+#step_size : 30000
+#max_iter: 180000
+
+
+# conver the whole test set. 484 * 128 = 62006 images.
+test_iter: 20
+# Each 6805 is one epoch, test after each epoch
+test_interval: 1000
+#base_lr: 0.005
+base_lr: 0.005
+momentum: 0.9
+weight_decay: 0.0005
+lr_policy: "step"
+# every 30 epochs, decrease the learning rate by factor 10.
+stepsize: 30000
+gamma: 0.4573050
+#power: 0.9
+display: 1000
+max_iter: 210000 # 120 epochs.
+snapshot: 30000
+snapshot_prefix: "buffer_/LightenedCNN"
+solver_mode: GPU

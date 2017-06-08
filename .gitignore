@@ -4,4 +4,6 @@ project_/
 tools_/
 private_/
 launch_/
+donot_delete_model_/
+task_/
 push.sh
