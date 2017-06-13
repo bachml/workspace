@@ -1,10 +1,46 @@
 name: "Face-ResNet"
-input: "data"
-input_dim: 1
-input_dim: 3
-input_dim: 128
-input_dim: 128
-
+layer {
+  name: "data"
+  type: "ImageData"
+  top: "data"
+  top: "label"
+  include { 
+    phase: TRAIN
+  }
+  transform_param {
+    mean_value: 127.5
+    mean_value: 127.5
+    mean_value: 127.5
+    scale: 0.0078125
+    mirror: true
+  }
+  image_data_param {
+    source: "face_example/data/caisa_train.txt"
+    batch_size: 256 
+    shuffle: true
+  }
+}
+layer {
+  name: "data"
+  type: "ImageData"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    mean_value: 127.5
+    mean_value: 127.5
+    mean_value: 127.5
+    scale: 0.0078125
+    mirror: true
+  }
+  image_data_param {
+    source: "face_example/data/caisa_val.txt"
+    batch_size: 128
+    shuffle: true
+  }
+}
 layer {
   name: "conv1a"
   type: "Convolution"
@@ -372,7 +408,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 256
     kernel_size: 3
     stride: 1
     weight_filler {
@@ -415,7 +451,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
@@ -449,7 +485,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
@@ -493,7 +529,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
@@ -527,7 +563,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
@@ -571,7 +607,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
@@ -605,7 +641,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
@@ -649,7 +685,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
@@ -683,7 +719,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
@@ -727,7 +763,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
@@ -761,7 +797,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 256
     kernel_size: 3
     stride: 1
     pad: 1
@@ -805,7 +841,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 256
+    num_output: 512
     kernel_size: 3
     stride: 1
     weight_filler {
@@ -848,7 +884,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 256
+    num_output: 512
     kernel_size: 3
     stride: 1
     pad: 1
@@ -882,7 +918,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 256
+    num_output: 512
     kernel_size: 3
     stride: 1
     pad: 1
@@ -926,7 +962,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 256
+    num_output: 512
     kernel_size: 3
     stride: 1
     pad: 1
@@ -960,7 +996,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 256
+    num_output: 512
     kernel_size: 3
     stride: 1
     pad: 1
@@ -1004,7 +1040,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 256
+    num_output: 512
     kernel_size: 3
     stride: 1
     pad: 1
@@ -1038,7 +1074,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: 256
+    num_output: 512
     kernel_size: 3
     stride: 1
     pad: 1
@@ -1082,7 +1118,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 256
+    num_output: 512
     weight_filler {
       type: "xavier"
     }
@@ -1091,4 +1127,55 @@ layer {
       value: 0
     }
   }
+}
+############## softmax loss ###############
+layer {
+  name: "fc6"
+  type: "InnerProduct"
+  bottom: "fc5"
+  top: "fc6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 10575
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "softmax_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc6"
+  bottom: "label"
+  top: "softmax_loss"
+}
+############## center loss ###############
+layer {
+  name: "center_loss"
+  type: "CenterLoss"
+  bottom: "fc5"
+  bottom: "label"
+  top: "center_loss"
+  param {
+    lr_mult: 1
+    decay_mult: 2 
+  }
+  center_loss_param {
+    num_output: 10575
+    center_filler {
+      type: "xavier"
+    }
+  }
+  loss_weight: 0.008
 }

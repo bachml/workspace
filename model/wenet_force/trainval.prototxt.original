@@ -15,10 +15,10 @@ layer {
    mirror: true
  }
  data_param {
-   #source: "/data/zeng/webface_112x96_train_lmdb"
+   #source: "/data/zeng/webface_256x256_train_lmdb"
    source: "/data/zeng/MsCeleb_256x256_train_lmdb"
    backend: LMDB
-   batch_size: 64
+   batch_size: 128
  }
 }
 layer {
@@ -38,11 +38,12 @@ layer {
  }
  data_param {
    source: "/data/zeng/MsCeleb_256x256_val_lmdb"
-   #source: "/data/zeng/webface_112x96_val_lmdb"
+   #source: "/data/zeng/webface_256x256_val_lmdb"
   backend: LMDB
   batch_size: 20
  }
 }
+
 layer {
   name: "conv1a"
   type: "Convolution"
@@ -58,8 +59,8 @@ layer {
   }
   convolution_param {
     num_output: 32
-    kernel_size: 9
-    stride: 2
+    kernel_size: 3
+    stride: 1
     weight_filler {
       type: "xavier"
     }
@@ -1130,7 +1131,6 @@ layer {
     }
   }
 }
-
 ############## softmax loss ###############
 layer {
   name: "fc6"
@@ -1139,14 +1139,14 @@ layer {
   top: "fc6"
   param {
     lr_mult: 1
-    decay_mult: 10
+    decay_mult: 2
   }
   param {
     lr_mult: 2
-    decay_mult: 10
+    decay_mult: 2
   }
   inner_product_param {
-    num_output: 76544
+    num_output: 10572
     weight_filler {
       type: "xavier"
     }
@@ -1175,12 +1175,10 @@ layer {
     decay_mult: 2
   }
   center_loss_param {
-    num_output: 76544
+    num_output: 10572
     center_filler {
       type: "xavier"
     }
   }
-  loss_weight: 0.0001
+  loss_weight: 0.008
 }
-
-

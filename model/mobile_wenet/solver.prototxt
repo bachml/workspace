@@ -1,0 +1,22 @@
+net: "model/mobile_wenet/trainval.prototxt"
+test_iter: 100 
+test_interval: 1000
+
+base_lr: 0.1
+lr_policy: "multistep"
+gamma: 0.1
+
+stepvalue: 16000
+stepvalue: 24000
+stepvalue: 28000
+#stepvalue: 36000
+max_iter:  28000
+
+
+display: 200
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 28000
+snapshot_prefix: "buffer_/mobile_wenet"
+
+solver_mode: GPU

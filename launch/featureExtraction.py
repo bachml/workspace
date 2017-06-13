@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '/home/zeng/caffe_wyd/python')
+sys.path.insert(0, '/home/zeng/sfm-caffe/python')
 import numpy as np
 import caffe
 import argparse
