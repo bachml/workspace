@@ -1,5 +1,6 @@
 import sys
-sys.path.insert(0, '/home/zeng/caffe_wyd/python')
+import time
+sys.path.insert(0, '/home/zeng/sfm-caffe/python')
 import numpy as np
 import caffe
 import argparse
@@ -63,6 +64,11 @@ if __name__ == "__main__":
     
     net.blobs['data'].reshape(1, 3, 256, 256)
     net.blobs['data'].data[...] = transformer.preprocess('data', caffe.io.resize_image(caffe.io.load_image(imagePath, color=True),(256, 256)))
+
+    start = time.clock()	
     out = net.forward()
-    feat = net.blobs[prob_name].data[0] # 'fc160' is the layer name in caffemodel, edit this arguments base on your own model
-    print(feat)
+    end = time.clock()	
+    print('time consume is: %f s' % (end - start))
+
+    #feat = net.blobs[prob_name].data[0] # 'fc160' is the layer name in caffemodel, edit this arguments base on your own model
+    #print(feat)
