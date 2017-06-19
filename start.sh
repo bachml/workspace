@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
 #task=WuNet_mobile
-#task=deepLightenedCNN
-task=wenet_force
+task=LightenedCNN
+#task=wenet_force
 #task=sparse_Wen
 
 #MODEL_HOME=/root/caffe/my_dirtywork/model
