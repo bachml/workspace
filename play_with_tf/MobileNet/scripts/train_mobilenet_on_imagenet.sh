@@ -5,10 +5,10 @@
 # 2. Evaluates the model on the Imagenet validation set.
 #
 # Usage:
-# ./scripts/train_mobilenet_on_imagenet.sh
+# ./scripts/train_deepid_on_imagenet.sh
 
 # Where the checkpoint and logs will be saved to.
-TRAIN_DIR=/tmp/mobilenet-model
+TRAIN_DIR=/tmp/deepid-model
 
 # Where the dataset is saved to.
 DATASET_DIR=/media/zehao/WD/Dataset/processed/ImageNet2012/imagenet-data
@@ -19,8 +19,8 @@ python train_image_classifier.py \
   --dataset_name=imagenet \
   --dataset_split_name=train \
   --dataset_dir=${DATASET_DIR} \
-  --model_name=mobilenet \
-  --preprocessing_name=mobilenet \
+  --model_name=deepid \
+  --preprocessing_name=deepid \
   --width_multiplier=1.0 \
   --max_number_of_steps=28000 \
   --batch_size=64 \
@@ -45,4 +45,4 @@ python train_image_classifier.py \
 #  --dataset_name=imagenet \
 #  --dataset_split_name=validation \
 #  --dataset_dir=${DATASET_DIR} \
-#  --model_name=mobilenet
+#  --model_name=deepid

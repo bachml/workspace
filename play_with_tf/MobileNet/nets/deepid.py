@@ -6,6 +6,9 @@ import tensorflow as tf
 import tensorflow.contrib.slim as slim
 
 
+def module_2convBlock():
+   
+
 def deepid(inputs,
           num_classes=10572,
           is_training=True,
@@ -15,14 +18,22 @@ def deepid(inputs,
   end_points = {}
 
   with tf.variable_scope(scope, 'deepid', [inputs, num_classes]):
-    net = slim.conv2d(inputs, 32, [3, 3], scope='conv1')
-    net = slim.max_pool2d(net, [2, 2], 2, scope='pool1')
+    net = slim.conv2d(inputs, 32, [3, 3], scope='conv1a')
+    net = slim.conv2d(inputs, 64, [3, 3], scope='conv1b')
+    net = slim.max_pool2d(net, [2, 2], 2, scope='pool1b')
+
+
     net = slim.conv2d(net, 64, [3, 3], scope='conv2')
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool2')
     net = slim.conv2d(net, 64, [3, 3], scope='conv3')
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool3')
+    #net = tf.nn.relu(net + scope='pool1')
     net = slim.conv2d(net, 96, [3, 3], scope='conv4')
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool4')
+    shortcut = slim.conv2d(net, 96, [3,3], stride=1, scope='conv5')
+    shortcut = slim.conv2d(shortcut, 96, [3,3], stride=1, scope='conv6')
+    net = net + shortcut
+    net = slim.max_pool2d(net, [2, 2], 2, scope='pool5')
     net = slim.flatten(net)
     end_points['Flatten'] = net
 
@@ -108,5 +119,5 @@ def deepid_arg_scope(weight_decay=0.0):
       [slim.conv2d, slim.fully_connected],
       weights_regularizer=slim.l2_regularizer(weight_decay),
       weights_initializer=tf.truncated_normal_initializer(stddev=0.1),
-      activation_fn=tf.nn.relu) as sc:
+      activation_fn=tf.nn.prelu) as sc:
     return sc
