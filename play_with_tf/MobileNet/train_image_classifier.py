@@ -489,7 +489,7 @@ def main(_):
 
       train_image_size = FLAGS.train_image_size or network_fn.default_image_size
 
-      image = image_preprocessing_fn(image, train_image_size, train_image_size)
+      image = image_preprocessing_fn(image, 112, 96)
 
       images, labels = tf.train.batch(
           [image, label],

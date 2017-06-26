@@ -4,7 +4,7 @@ from datetime import datetime
 import math
 import argparse
 import sys
-from nets.mobilenet import mobilenet, mobilenet_arg_scope
+#from nets.mobilenet import mobilenet, mobilenet_arg_scope
 from nets.deepid import deepid, deepid_arg_scope
 import numpy as np
 
@@ -120,7 +120,7 @@ if __name__ == '__main__':
   parser.add_argument(
     '--mode',
     type=str,
-    default='cpu',
+    default='gpu',
     help='gpu/cpu mode.'
   )
   parser.add_argument(

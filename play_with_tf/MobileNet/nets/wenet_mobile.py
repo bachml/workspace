@@ -6,75 +6,61 @@ import tensorflow as tf
 import tensorflow.contrib.slim as slim
 
 
+def module_2convBlock(net, block_size, block_index, num_output, kernel_size, stride):
+    for i in range(block_size):
+        suffix_A = block_index+'_'+str(2*i+1)
+        shortcut = depthwise_separable_conv(net, num_output, kernel_size,  scope='conv'+suffix_A)
+        suffix_B = block_index+'_'+str(2*i+2)
+        shortcut = depthwise_separable_conv(shortcut, num_output,  kernel_size, scope='conv'+suffix_B)
+        net = net + shortcut
+    '''
+    for i in range(block_size):
+        suffix_A = block_index+'_'+str(2*i+1)
+    '''
 
-def bottleneck_group(inputs, num_output, outputs_collections=None, scope=None):
-    with tf.variable_scope(scope, 'resnet_block', [inputs]) as sc:
-        shortcut = slim.conv2d(inputs, num_output, [3, 3], stride=1, scope='conv1')
-        shortcut = slim.conv2d(shortcut, num_output, [3, 3], stride=1, scope='conv2')
-        output = inputs + shortcut
-        return slim.utils.collect_named_outputs(outputs_collections, sc.original_name_scope, output)
-
-def bottleneck_grougp(inputs, num_output, outputs_collections=None, scope=None):
-    with tf.variable_scope(scope, 'resnet_block', [inputs]) as sc:
-
-        depthwise_conv = slim.separable_convolution2d(inputs, num_outputs=None, stride=1, depth_multiplier=1, kernel_size=[3,3], scope='conv_dw')
-        #bn = slim.batch_norm(depthwise_conv, scope='conv_dw_bn')
-        pointwise_conv = slim.convolution2d(depthwise_conv, num_output, [1, 1], scope='conv_pw')
-        #bn = slim.batch_norm(pointwise_conv, scope='conv_pw_bn')
-
-        output = inputs + pointwise_conv
-        return slim.utils.collect_named_outputs(outputs_collections, sc.original_name_scope, output)
+    return net
 
 
-def deepid(inputs,
+def depthwise_separable_conv(inputs, num_output, _kernel_size, scope):
+    depthwise_conv = slim.separable_convolution2d(inputs, num_outputs=None, stride=1, depth_multiplier=1, kernel_size=[_kernel_size, _kernel_size], scope=scope+'_dw')
+    bn = slim.batch_norm(depthwise_conv, scope=scope+'_dw_bn')
+    pointwise_conv = slim.convolution2d(bn, num_output, kernel_size=[1,1], scope=scope+'_pw')
+    bn = slim.batch_norm(pointwise_conv, scope=scope+'_pw_bn')
+    return bn
+
+def wenet_mobile(inputs,
           num_classes=10572,
           is_training=True,
           width_multiplier=1,
-          scope='deepid'):
+          scope='wenet_mobile'):
 
   end_points = {}
 
-  with tf.variable_scope(scope, 'deepid', [inputs, num_classes]):
-    net = slim.conv2d(inputs, 32, [3, 3], scope='conv1a')
-    net = slim.conv2d(net, 64, [3, 3], scope='conv1b')
+  with tf.variable_scope(scope, 'wenet_mobile', [inputs, num_classes]):
+    net = depthwise_separable_conv(inputs, 32, 3, scope='conv1a')
+    net = depthwise_separable_conv(net, 64, 3, scope='conv1b')
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool1b')
-
-
-    net = bottleneck_group(net, 64)
-
-
-    net = slim.conv2d(net, 128, [3, 3], scope='conv2')
+    net = module_2convBlock(net, 1, '2', 64, 3, 1)
+    net = depthwise_separable_conv(net, 128,3, scope='conv2')
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool2')
-
-    net = bottleneck_group(net, 128)
-    net = bottleneck_group(net, 128)
-
-    net = slim.conv2d(net, 256, [3, 3], scope='conv3')
+    net = module_2convBlock(net, 2, '3', 128, 3, 1)
+    net = depthwise_separable_conv(net, 256, 3, scope='conv3')
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool3')
-
-    net = bottleneck_group(net, 256)
-    net = bottleneck_group(net, 256)
-    net = bottleneck_group(net, 256)
-    net = bottleneck_group(net, 256)
-    net = bottleneck_group(net, 256)
-
-    net = slim.conv2d(net, 512, [3, 3], scope='conv4')
+    net = module_2convBlock(net, 5, '4', 256, 3, 1)
+    net = depthwise_separable_conv(net, 512, 3, scope='conv4')
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool4')
-
-    net = bottleneck_group(net, 512)
-    net = bottleneck_group(net, 512)
-    net = bottleneck_group(net, 512)
+    net = module_2convBlock(net, 3, '5', 512, 3, 1)
 
     '''
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool2')
     net = module_2convBlock(net, 2, '1', 64, 3, 1)
-    net = slim.conv2d(net, 64, [3, 3], scope='conv3')
+    net = depthwise_separable_conv(net, 64, [3, 3], scope='conv3')
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool3')
     #net = tf.nn.relu(net + scope='pool1')
-    net = slim.conv2d(net, 96, [3, 3], scope='conv4')
+    net = depthwise_separable_conv(net, 96, [3, 3], scope='conv4')
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool4')
-    shortcut = slim.conv2d(net, 96, [3,3], stride=1, scope='conv5')
-    shortcut = slim.conv2d(shortcut, 96, [3,3], stride=1, scope='conv6')
+    shortcut = depthwise_separable_conv(net, 96, [3,3], stride=1, scope='conv5')
+    shortcut = depthwise_separable_conv(shortcut, 96, [3,3], stride=1, scope='conv6')
     net = net + shortcut
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool5')
     '''
@@ -129,12 +115,12 @@ def deepid(inputs,
 
   return logits, end_points
 '''
-deepid.default_image_size = 224
+wenet_mobile.default_image_size = 224
 
 
 '''
-def deepid_arg_scope(weight_decay=0.0):
-  """Defines the default deepid argument scope.
+def wenet_mobile_arg_scope(weight_decay=0.0):
+  """Defines the default wenet_mobile argument scope.
 
   Args:
     weight_decay: The weight decay to use for regularizing the model.
@@ -150,7 +136,7 @@ def deepid_arg_scope(weight_decay=0.0):
     return sc
 '''
 
-def deepid_arg_scope(weight_decay=0.0):
+def wenet_mobile_arg_scope(weight_decay=0.0):
   """Defines the default lenet argument scope.
 
   Args:

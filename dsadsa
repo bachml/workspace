@@ -1,0 +1,17 @@
+q!
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   play_with_tf/MobileNet/nets/deepid.py
+#	modified:   play_with_tf/MobileNet/nets/deepid.pyc
+#	modified:   play_with_tf/MobileNet/nets/resnet_v1.pyc
+#	new file:   play_with_tf/MobileNet/nets/wenet.py
+#	modified:   play_with_tf/MobileNet/scripts/train_mobilenet_on_imagenet.sh
+#
+# Changes not staged for commit:
+#	modified:   netgenerator (modified content, untracked content)
+#

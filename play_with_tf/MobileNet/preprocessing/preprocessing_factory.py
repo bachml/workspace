@@ -68,7 +68,8 @@ def get_preprocessing(name, is_training=False):
       'vgg_19': vgg_preprocessing,
       'mobilenet': mobilenet_preprocessing,
       'mobilenetdet': mobilenetdet_preprocessing,
-      'deepid': deepid_preprocessing
+      'deepid': deepid_preprocessing,
+      'wenet': deepid_preprocessing
   }
 
   if name not in preprocessing_fn_map:
