@@ -27,6 +27,7 @@ from nets import nets_factory
 from preprocessing import preprocessing_factory
 
 
+
 def get_dataset():
     reader = tf.TFRecordReader
     keys_to_features = {
@@ -506,7 +507,9 @@ def main(_):
     ####################
     def clone_fn(batch_queue):
       """Allows data parallelism by creating multiple clones of network_fn."""
-      images, labels = batch_queue.dequeue()
+      #images, labels = batch_queue.dequeue()
+      with tf.device(deploy_config.inputs_device()):
+	images, labels = batch_queue.dequeue()
       logits, end_points = network_fn(images)
 
       #############################
@@ -610,6 +613,11 @@ def main(_):
     ###########################
     # Kicks off the training. #
     ###########################
+
+    session_config = tf.ConfigProto()
+    session_config.gpu_options.allow_growth = True
+    #session = tf.Session(session_config=session_config)
+
     slim.learning.train(
         train_tensor,
         logdir=FLAGS.train_dir,
@@ -621,6 +629,7 @@ def main(_):
         log_every_n_steps=FLAGS.log_every_n_steps,
         save_summaries_secs=FLAGS.save_summaries_secs,
         save_interval_secs=FLAGS.save_interval_secs,
+        session_config=session_config,
         sync_optimizer=optimizer if FLAGS.sync_replicas else None)
 
 

@@ -10,21 +10,34 @@ import tensorflow.contrib.slim as slim
 def bottleneck_group(inputs, num_output, outputs_collections=None, scope=None):
     with tf.variable_scope(scope, 'resnet_block', [inputs]) as sc:
         shortcut = slim.conv2d(inputs, num_output, [3, 3], stride=1, scope='conv1')
+        shortcut = prelu(shortcut)
         shortcut = slim.conv2d(shortcut, num_output, [3, 3], stride=1, scope='conv2')
+        shortcut = prelu(shortcut)
         output = inputs + shortcut
         return slim.utils.collect_named_outputs(outputs_collections, sc.original_name_scope, output)
 
-def bottleneck_grouhp(inputs, num_output, outputs_collections=None, scope=None):
+def bottleneck_groupdd(inputs, num_output, outputs_collections=None, scope=None):
     with tf.variable_scope(scope, 'resnet_block', [inputs]) as sc:
 
-        depthwise_conv = slim.separable_convolution2d(inputs, num_outputs=num_output, stride=1, depth_multiplier=1, kernel_size=[3,3], scope='conv_dw')
+        depthwise_conv = slim.separable_convolution2d(inputs, num_outputs=None, stride=1, depth_multiplier=1, kernel_size=[3,3], scope='conv_dw')
+        depthwise_conv = prelu(depthwise_conv)
         #bn = slim.batch_norm(depthwise_conv, scope='conv_dw_bn')
         pointwise_conv = slim.convolution2d(depthwise_conv, num_output, [1, 1], scope='conv_pw')
+        pointwise_conv = prelu(pointwise_conv)
         #bn = slim.batch_norm(pointwise_conv, scope='conv_pw_bn')
 
         output = inputs + pointwise_conv
         return slim.utils.collect_named_outputs(outputs_collections, sc.original_name_scope, output)
 
+
+def prelu(_x, scope=None):
+    with tf.variable_scope(scope, "prelu", [_x]):
+        alphas = tf.get_variable('alpha', _x.get_shape()[-1],
+                            initializer=tf.constant_initializer(0.0),
+                            dtype=tf.float32)
+        pos = tf.nn.relu(_x)
+        neg = alphas * (_x - abs(_x)) * 0.5
+        return pos + neg
 
 def wenet(inputs,
           num_classes=10572,
@@ -41,7 +54,9 @@ def wenet(inputs,
 
   with tf.variable_scope(scope, 'wenet', [inputs, num_classes]):
     net = slim.conv2d(inputs, 32, [3, 3], stride=1,  scope='conv1a',weights_initializer=slim.initializers.xavier_initializer())
+    net = prelu(net)
     net = slim.conv2d(net, 64, [3, 3], stride=1, scope='conv1b', weights_initializer=slim.initializers.xavier_initializer())
+    net = prelu(net)
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool1b')
 
 
@@ -49,12 +64,14 @@ def wenet(inputs,
 
 
     net = slim.conv2d(net, 128, [3, 3], stride=1, scope='conv2', weights_initializer=slim.initializers.xavier_initializer())
+    net = prelu(net)
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool2')
 
     net = bottleneck_group(net, 128)
     net = bottleneck_group(net, 128)
 
     net = slim.conv2d(net, 256, [3, 3], stride=1, scope='conv3', weights_initializer=slim.initializers.xavier_initializer())
+    net = prelu(net)
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool3')
 
     net = bottleneck_group(net, 256)
@@ -64,6 +81,7 @@ def wenet(inputs,
     net = bottleneck_group(net, 256)
 
     net = slim.conv2d(net, 512, [3, 3], stride=1, scope='conv4', weights_initializer=slim.initializers.xavier_initializer())
+    net = prelu(net)
     net = slim.max_pool2d(net, [2, 2], 2, scope='pool4')
 
     net = bottleneck_group(net, 512)
@@ -118,6 +136,8 @@ def wenet_arg_scope(weight_decay=0.0005):
   with slim.arg_scope(
       [slim.conv2d, slim.fully_connected],
       weights_regularizer=slim.l2_regularizer(weight_decay),
-      weights_initializer=tf.truncated_normal_initializer(stddev=0.01),
-      activation_fn=tf.nn.relu) as sc:
+      weights_initializer=tf.truncated_normal_initializer(stddev=0.01)) as sc:
     return sc
+
+      #activation_fn=tf.contrib.keras.layers.PReLU,
+      #activation_fn=tf.nn.relu

@@ -23,7 +23,7 @@ python train_image_classifier.py \
   --preprocessing_name=wenet \
   --width_multiplier=1.0 \
   --max_number_of_steps=28000 \
-  --batch_size=64 \
+  --batch_size=32 \
   --save_interval_secs=240 \
   --save_summaries_secs=240 \
   --log_every_n_steps=100 \
@@ -31,7 +31,7 @@ python train_image_classifier.py \
   --momentum=0.9 \
   --weight_decay=0.0005 \
   --learning_rate_decay_type=step \
-  --num_clones=2 \
+  --num_clones=4 \
   --learning_rate=0.1
   #--rmsprop_decay=0.9
   #--num_epochs_per_decay=30.0 \
