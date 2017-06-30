@@ -23,9 +23,9 @@ python train_image_classifier.py \
   --preprocessing_name=wenet \
   --width_multiplier=1.0 \
   --max_number_of_steps=28000 \
-  --batch_size=32 \
-  --save_interval_secs=240 \
-  --save_summaries_secs=240 \
+  --batch_size=128 \
+  --save_interval_secs=200 \
+  --save_summaries_secs=200 \
   --log_every_n_steps=100 \
   --optimizer=sgd \
   --momentum=0.9 \

@@ -120,7 +120,7 @@ if __name__ == '__main__':
   parser.add_argument(
     '--mode',
     type=str,
-    default='gpu',
+    default='cpu',
     help='gpu/cpu mode.'
   )
   parser.add_argument(

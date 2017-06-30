@@ -52,10 +52,10 @@ def metric_cosine(x1, x2):
 if __name__ == "__main__":
 
 
-    basepath = '/home/zeng/workspace/buffer_/metric_results/'
+    basepath = '/home/zeng/workspace/metric_results_/'
     name = "facenet"
     folder = "./"
-    
+
     args = parse_args()
     task_name = args.task_name
     intra_feature = np.load(basepath + args.task_name + "_intra.npy")
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     intra_dist = np.empty(shape=[0, 1])
     extra_dist = np.empty(shape=[0, 1])
 
-    
+
 
     for i in range(args.num_pairs * 2):
         if i%2 == 1:

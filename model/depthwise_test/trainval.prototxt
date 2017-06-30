@@ -104,7 +104,7 @@ layer {
   bottom: "pool1b"
   top: "conv2_1/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 64
@@ -152,7 +152,7 @@ layer {
   bottom: "conv2_1/scale"
   top: "conv2_2/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 64
@@ -245,7 +245,7 @@ layer {
   bottom: "pool2"
   top: "conv3_1/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 128
@@ -293,7 +293,7 @@ layer {
   bottom: "conv3_1/scale"
   top: "conv3_2/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 128
@@ -351,7 +351,7 @@ layer {
   bottom: "eltwise3_2"
   top: "conv3_3/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 128
@@ -399,7 +399,7 @@ layer {
   bottom: "conv3_3/scale"
   top: "conv3_4/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 128
@@ -492,7 +492,7 @@ layer {
   bottom: "pool3"
   top: "conv4_1/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
@@ -540,7 +540,7 @@ layer {
   bottom: "conv4_1/scale"
   top: "conv4_2/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
@@ -598,7 +598,7 @@ layer {
   bottom: "eltwise4_2"
   top: "conv4_3/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
@@ -646,7 +646,7 @@ layer {
   bottom: "conv4_3/scale"
   top: "conv4_4/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
@@ -704,7 +704,7 @@ layer {
   bottom: "eltwise4_4"
   top: "conv4_5/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
@@ -752,7 +752,7 @@ layer {
   bottom: "conv4_5/scale"
   top: "conv4_6/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
@@ -810,7 +810,7 @@ layer {
   bottom: "eltwise4_6"
   top: "conv4_7/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
@@ -858,7 +858,7 @@ layer {
   bottom: "conv4_7/scale"
   top: "conv4_8/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
@@ -916,7 +916,7 @@ layer {
   bottom: "eltwise4_8"
   top: "conv4_9/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
@@ -964,7 +964,7 @@ layer {
   bottom: "conv4_9/scale"
   top: "conv4_10/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 256
@@ -1057,7 +1057,7 @@ layer {
   bottom: "pool4"
   top: "conv5_1/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
   convolution_param {
     num_output: 512
@@ -1105,7 +1105,7 @@ layer {
   bottom: "conv5_1/scale"
   top: "conv5_2/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
   convolution_param {
     num_output: 512
@@ -1163,7 +1163,7 @@ layer {
   bottom: "eltwise5_2"
   top: "conv5_3/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
   convolution_param {
     num_output: 512
@@ -1211,7 +1211,7 @@ layer {
   bottom: "conv5_3/scale"
   top: "conv5_4/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
   convolution_param {
     num_output: 512
@@ -1269,7 +1269,7 @@ layer {
   bottom: "eltwise5_4"
   top: "conv5_5/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
   convolution_param {
     num_output: 512
@@ -1317,7 +1317,7 @@ layer {
   bottom: "conv5_5/scale"
   top: "conv5_6/dw"
   type: "DepthwiseConvolution"
-  param { lr_mult: 1 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 1 decay_mult: 1 }
   convolution_param {
     num_output: 512

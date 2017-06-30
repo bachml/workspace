@@ -162,7 +162,7 @@ tf.app.flags.DEFINE_string(
     'Specifies how the learning rate is decayed. One of "fixed", "exponential",'
     ' or "polynomial"')
 
-tf.app.flags.DEFINE_float('learning_rate', 0.01, 'Initial learning rate.')
+tf.app.flags.DEFINE_float('learning_rate', 0.1, 'Initial learning rate.')
 
 tf.app.flags.DEFINE_float(
     'end_learning_rate', 0.0001,
@@ -283,10 +283,10 @@ def _configure_learning_rate(num_samples_per_epoch, global_step):
     return tf.constant(FLAGS.learning_rate, name='fixed_learning_rate')
 
   elif FLAGS.learning_rate_decay_type == 'step':
-    global_step = tf.Variable(0, trainable=True)
-    boundaries = [16000, 24000, 28000]
-    values = [0.1, 0.01, 0.001]
-    return tf.train.piecewise_constant(global_step, boundaries, values)
+    temp_global_step = tf.Variable(0, trainable=False)
+    boundaries = [0, 100, 200]
+    values = [0.001, 0.0001, 0.00001]
+    return tf.train.piecewise_constant(temp_global_step, boundaries, values)
 
 # Later, whenever we perform an optimization step, we increment global_step.
 

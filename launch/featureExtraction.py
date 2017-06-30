@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '/home/zeng/sfm-caffe/python')
+sys.path.insert(0, '/home/zeng/dp-caffe/python')
 import numpy as np
 import caffe
 import argparse
@@ -17,7 +17,10 @@ def parse_args():
     parser.add_argument('--d', dest='dim', default=256, type=int,
 			help='feature dimensions')
 
-    parser.add_argument('--i', dest='imageSize', default=256, type=int,
+    parser.add_argument('--h', dest='imageSize_h', default=256, type=int,
+                        help='image size ')
+
+    parser.add_argument('--w', dest='imageSize_w', default=256, type=int,
                         help='image size ')
 
     parser.add_argument('--n', dest='blobname', default='prob', type=str,
@@ -26,8 +29,8 @@ def parse_args():
     parser.add_argument('--t', dest='task_path', default='../model/Wen_ECCV/', type=str,
 			help='path of task folder')
 
-    parser.add_argument('--m', dest='model_path', default='../buffer_/Wen_ECCV.caffemodel', type=str,
-			help='path of trained model')
+    #parser.add_argument('--m', dest='model_path', default='../buffer_/Wen_ECCV.caffemodel', type=str,
+    #			help='path of trained model')
 
     parser.add_argument('--td', dest='discript', default='None', type=str,
 			help='task discription')
@@ -91,7 +94,7 @@ def extract_feature(net, transformer, filelist, dimension, imageSize, test_dataP
     return (nan, _label)
 
 
-def task_face_feature_extraction(filelist, taskPath, net, transformer, dim, imageSize,  blob_name, isColor):
+def task_face_feature_extraction(filelist, taskPath, net, transformer, dim, imageSize_h, imageSize_w,  blob_name, isColor):
     file = open(filelist)
     if isColor == 1:
 	channels = 3
@@ -106,19 +109,19 @@ def task_face_feature_extraction(filelist, taskPath, net, transformer, dim, imag
 	if not line:
 	    break
 	pass
-	
+
 	if (i%100==0):
 	    print('iteration ' + str(i))
 	imagePath = line.strip('\n')
-	net.blobs['data'].reshape(1, channels, imageSize, imageSize)
-	net.blobs['data'].data[...] = transformer.preprocess('data', caffe.io.resize_image(caffe.io.load_image(taskPath+imagePath, color=isColor),(imageSize, imageSize)))
+	net.blobs['data'].reshape(1, channels, imageSize_h, imageSize_w)
+	net.blobs['data'].data[...] = transformer.preprocess('data', caffe.io.resize_image(caffe.io.load_image(taskPath+imagePath, color=isColor),(imageSize_h, imageSize_w)))
 	net.forward()
 	feature = net.blobs[blob_name].data[0]
 	feature_batch[i-1,:] = feature
 
     return feature_batch
-	
-    
+
+
 def util_countLine(path):
     numLine = 0
     reader = open(path)
@@ -133,13 +136,14 @@ def util_countLine(path):
 if __name__ == "__main__":
 
     args = parse_args()
-    test_dataPath = "/home/zeng/data4my_dirtywork/id_rgb_256/"
-    deployNet_path = args.task_path + '/deploy.prototxt'
-    caffemodel_path = args.model_path
+    test_dataPath = "/home/zeng/data4my_dirtywork/id_rgb_112x96/"
+
+    deployNet_path =  args.task_path + '/deploy.prototxt'
+    caffemodel_path = args.task_path + '/deploy.caffemodel'
 
     (net, transformer) = net_config(deployNet_path, caffemodel_path, args.isColor)
 
-    intra_feature = task_face_feature_extraction(test_dataPath+'intra.txt', test_dataPath, net, transformer, args.dim, args.imageSize, args.blobname, args.isColor)
-    np.save('../buffer_/metric_results/'+args.discript+'_intra', intra_feature)
-    extra_feature = task_face_feature_extraction(test_dataPath+'extra.txt', test_dataPath, net, transformer, args.dim, args.imageSize, args.blobname, args.isColor)
-    np.save('../buffer_/metric_results/'+args.discript+'_extra', extra_feature)
+    intra_feature = task_face_feature_extraction(test_dataPath+'intra.txt', test_dataPath, net, transformer, args.dim, args.imageSize_h, args.imageSize_w, args.blobname, args.isColor)
+    np.save('../metric_results_/'+args.discript+'_intra', intra_feature)
+    extra_feature = task_face_feature_extraction(test_dataPath+'extra.txt', test_dataPath, net, transformer, args.dim, args.imageSize_h, args.imageSize_w, args.blobname, args.isColor)
+    np.save('../metric_results_/'+args.discript+'_extra', extra_feature)

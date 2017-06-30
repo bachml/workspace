@@ -5,4 +5,7 @@ tools_/
 launch_/
 donot_delete_model_/
 task_/
+metric_results_/
+*.txt
+*.mat
 push.sh

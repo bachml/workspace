@@ -1,6 +1,6 @@
 import sys
 import time
-sys.path.insert(0, '/home/zeng/sfm-caffe/python')
+sys.path.insert(0, '/home/zeng/dp-caffe/python')
 import numpy as np
 import caffe
 import argparse
@@ -13,6 +13,10 @@ def parse_args():
 			help='image path')
     parser.add_argument('--pn', dest='prob_name', default=None, type=str,
 			help='prob path')
+    parser.add_argument('--h', dest='img_h', default=256, type=int,
+			help='image height')
+    parser.add_argument('--w', dest='img_w', default=256, type=int,
+			help='image width')
 
 
     if len(sys.argv) == 1:
@@ -23,7 +27,7 @@ def parse_args():
     return args
 
 def net_config(deployNet_path, caffemodel_path, isColor):
-    caffe.set_mode_gpu()
+    caffe.set_mode_cpu()
 
 def readDeepNet(trainNet_path, caffemodel_path):
     caffe.set_mode_cpu()
@@ -53,22 +57,25 @@ if __name__ == "__main__":
     task_name = args.task_name
     imagePath = args.image_path
     prob_name = args.prob_name
+    img_w = args.img_w
+    img_h = args.img_h
 
     workspace_path = '/home/zeng/workspace/'
-    
-    trainNet_path =   task_name + "/deploy.prototxt"
-    caffemodel_path =  task_name + '/' + task_name + '.caffemodel'
+
+    caffemodel_path = '../task_/' + task_name + '/' + 'deploy.caffemodel'
+    trainNet_path = '../task_/' + task_name + '/' + 'deploy.prototxt'
 
 
     (net, transformer) = readDeepNet(trainNet_path, caffemodel_path)
-    
-    net.blobs['data'].reshape(1, 3, 256, 256)
-    net.blobs['data'].data[...] = transformer.preprocess('data', caffe.io.resize_image(caffe.io.load_image(imagePath, color=True),(256, 256)))
 
-    start = time.clock()	
-    out = net.forward()
-    end = time.clock()	
-    print('time consume is: %f s' % (end - start))
+    net.blobs['data'].reshape(1, 3, img_h, img_w)
+    net.blobs['data'].data[...] = transformer.preprocess('data', caffe.io.resize_image(caffe.io.load_image(imagePath, color=True),(img_h, img_w)))
+
+    start = time.clock()
+    for i in range(10):
+        out = net.forward()
+    end = time.clock()
+    print('time consume is: %f s' % ((end - start)/10))
 
     #feat = net.blobs[prob_name].data[0] # 'fc160' is the layer name in caffemodel, edit this arguments base on your own model
     #print(feat)

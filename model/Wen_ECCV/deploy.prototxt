@@ -1,8 +1,8 @@
 input: "data"
 input_dim: 1
 input_dim: 3
-input_dim: 256
-input_dim: 256
+input_dim: 112
+input_dim: 96
 layer {
   name: "conv1a"
   bottom: "data"
@@ -12,9 +12,9 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 32
-    kernel_size: 10
-    stride: 2
-    pad: 4
+    kernel_size: 3
+    stride: 1
+    pad: 1
     group: 1
     weight_filler { type: "xavier" std: 0.010 }
     bias_filler { type: "constant" value: 0 }

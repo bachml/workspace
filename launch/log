@@ -1,0 +1,3 @@
+83.73% wenet_112x96_baseline
+80.9% wenet_112x96_depthwise
+81.0% wenet_112x96_depthwise_decay0
