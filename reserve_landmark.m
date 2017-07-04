@@ -31,5 +31,5 @@ for image_k = 1:num
     %aligned_facial_mat = [aligned_facial_mat; aligned_facial_points];  
     aligned_landmarks(image_k, :) = aligned_facial_points;
 end
-save 238.mat aligned_landmarks
+save 239.mat aligned_landmarks
       

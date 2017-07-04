@@ -14,7 +14,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/MsCeleb_112x96_train_lmdb"
+   source: "/data/zeng/MsCeleb_256x256_train_lmdb"
    backend: LMDB
    batch_size : 64
   }
@@ -35,7 +35,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/MsCeleb_112x96_val_lmdb"
+   source: "/data/zeng/MsCeleb_256x256_val_lmdb"
    backend: LMDB
    batch_size : 20
   }
@@ -49,13 +49,11 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 32
-    kernel_size: 3
-    stride: 1
-    pad: 1
-    group: 1
+    kernel_size: 9
+    pad: 4
+    stride: 2
     weight_filler { type: "xavier" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -74,12 +72,10 @@ layer {
   convolution_param {
     num_output: 64
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "xavier" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -109,12 +105,10 @@ layer {
   convolution_param {
     num_output: 64
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -133,12 +127,10 @@ layer {
   convolution_param {
     num_output: 64
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -150,7 +142,7 @@ layer {
 layer {
   name: "eltwise2_2"
   bottom: "pool1b"
-  bottom: "conv2_2"
+  bottom: "PReLU2_2"
   top: "eltwise2_2"
   type: "Eltwise"
   eltwise_param {
@@ -167,12 +159,10 @@ layer {
   convolution_param {
     num_output: 128
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -202,12 +192,10 @@ layer {
   convolution_param {
     num_output: 128
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -226,12 +214,10 @@ layer {
   convolution_param {
     num_output: 128
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -243,7 +229,7 @@ layer {
 layer {
   name: "eltwise3_2"
   bottom: "pool2"
-  bottom: "conv3_2"
+  bottom: "PReLU3_2"
   top: "eltwise3_2"
   type: "Eltwise"
   eltwise_param {
@@ -260,12 +246,10 @@ layer {
   convolution_param {
     num_output: 128
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -284,12 +268,10 @@ layer {
   convolution_param {
     num_output: 128
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -301,7 +283,7 @@ layer {
 layer {
   name: "eltwise3_4"
   bottom: "eltwise3_2"
-  bottom: "conv3_4"
+  bottom: "PReLU3_4"
   top: "eltwise3_4"
   type: "Eltwise"
   eltwise_param {
@@ -318,12 +300,10 @@ layer {
   convolution_param {
     num_output: 256
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -353,12 +333,10 @@ layer {
   convolution_param {
     num_output: 256
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -377,12 +355,10 @@ layer {
   convolution_param {
     num_output: 256
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -394,7 +370,7 @@ layer {
 layer {
   name: "eltwise4_2"
   bottom: "pool3"
-  bottom: "conv4_2"
+  bottom: "PReLU4_2"
   top: "eltwise4_2"
   type: "Eltwise"
   eltwise_param {
@@ -411,12 +387,10 @@ layer {
   convolution_param {
     num_output: 256
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -435,12 +409,10 @@ layer {
   convolution_param {
     num_output: 256
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -452,7 +424,7 @@ layer {
 layer {
   name: "eltwise4_4"
   bottom: "eltwise4_2"
-  bottom: "conv4_4"
+  bottom: "PReLU4_4"
   top: "eltwise4_4"
   type: "Eltwise"
   eltwise_param {
@@ -469,12 +441,10 @@ layer {
   convolution_param {
     num_output: 256
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -493,12 +463,10 @@ layer {
   convolution_param {
     num_output: 256
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -510,7 +478,7 @@ layer {
 layer {
   name: "eltwise4_6"
   bottom: "eltwise4_4"
-  bottom: "conv4_6"
+  bottom: "PReLU4_6"
   top: "eltwise4_6"
   type: "Eltwise"
   eltwise_param {
@@ -527,12 +495,10 @@ layer {
   convolution_param {
     num_output: 256
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -551,12 +517,10 @@ layer {
   convolution_param {
     num_output: 256
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -568,7 +532,7 @@ layer {
 layer {
   name: "eltwise4_8"
   bottom: "eltwise4_6"
-  bottom: "conv4_8"
+  bottom: "PReLU4_8"
   top: "eltwise4_8"
   type: "Eltwise"
   eltwise_param {
@@ -585,12 +549,10 @@ layer {
   convolution_param {
     num_output: 256
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -609,12 +571,10 @@ layer {
   convolution_param {
     num_output: 256
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -626,7 +586,7 @@ layer {
 layer {
   name: "eltwise4_10"
   bottom: "eltwise4_8"
-  bottom: "conv4_10"
+  bottom: "PReLU4_10"
   top: "eltwise4_10"
   type: "Eltwise"
   eltwise_param {
@@ -643,12 +603,10 @@ layer {
   convolution_param {
     num_output: 512
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -674,16 +632,14 @@ layer {
   top: "conv5_1"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 512
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -698,16 +654,14 @@ layer {
   top: "conv5_2"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 512
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -719,7 +673,7 @@ layer {
 layer {
   name: "eltwise5_2"
   bottom: "pool4"
-  bottom: "conv5_2"
+  bottom: "PReLU5_2"
   top: "eltwise5_2"
   type: "Eltwise"
   eltwise_param {
@@ -732,16 +686,14 @@ layer {
   top: "conv5_3"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 512
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -756,16 +708,14 @@ layer {
   top: "conv5_4"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 512
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -777,7 +727,7 @@ layer {
 layer {
   name: "eltwise5_4"
   bottom: "eltwise5_2"
-  bottom: "conv5_4"
+  bottom: "PReLU5_4"
   top: "eltwise5_4"
   type: "Eltwise"
   eltwise_param {
@@ -790,16 +740,14 @@ layer {
   top: "conv5_5"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 512
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -814,16 +762,14 @@ layer {
   top: "conv5_6"
   type: "Convolution"
   param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 512
     kernel_size: 3
-    stride: 1
     pad: 1
-    group: 1
+    stride: 1
     weight_filler { type: "gaussian" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
-    #engine: CAFFE
   }
 }
 layer {
@@ -835,7 +781,7 @@ layer {
 layer {
   name: "eltwise5_6"
   bottom: "eltwise5_4"
-  bottom: "conv5_6"
+  bottom: "PReLU5_6"
   top: "eltwise5_6"
   type: "Eltwise"
   eltwise_param {
@@ -860,8 +806,8 @@ layer {
   type: "InnerProduct"
   bottom: "fc5"
   top: "fc6"
-  param { lr_mult: 1 decay_mult: 10 }
-  param { lr_mult: 2 decay_mult: 10 }
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
      num_output: 76544
      weight_filler { type: "xavier" std: 0.010 }
@@ -875,4 +821,22 @@ layer {
   bottom: "label"
   top: "softmax_loss"
   loss_weight: 1
+}
+layer {
+  name: "center_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc6"
+  bottom: "label"
+  top: "center_loss"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  center_loss_param {
+    num_output: 76544
+    center_filler {
+      type: "xavier"
+    }  
+  }
+  loss_weight: 0.000100
 }

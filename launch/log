@@ -1,3 +1,11 @@
+88% wenet_original
 83.73% wenet_112x96_baseline
 80.9% wenet_112x96_depthwise
-81.0% wenet_112x96_depthwise_decay0
+81.0% wenet_112x96_depthwise_decay0 // scale decay0
+81.23% webet_112x96_depthwise_decay0_2 // depthwise decay0
+82.5% wenet_224x192 // k = 3
+82.8% wenet_224x192 // k = 8
+82.9% wenet_224x192 // k = 9
+82.23% wenet_256x256
+
+

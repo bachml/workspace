@@ -6,11 +6,11 @@ base_lr: 0.1
 lr_policy: "multistep"
 gamma: 0.1
 
-stepvalue: 32000
-stepvalue: 48000
-stepvalue: 56000
-stepvalue: 72000
-max_iter:  72000
+stepvalue: 16000
+stepvalue: 24000
+stepvalue: 28000
+#stepvalue: 36000
+max_iter:  28000
 
 
 display: 200

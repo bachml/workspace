@@ -1,45 +1,8 @@
-layer {
-  name: 'data'
-  type: 'Data'
-  top: 'data'
-  top: 'label'
-  include {
-    phase: TRAIN
- }
- transform_param {
-   mean_value: 127.5
-   mean_value: 127.5
-   mean_value: 127.5
-   scale: 0.0078125
-   mirror: true
- }
- data_param {
-   source: "/data/zeng/MsCeleb_112x96_train_lmdb"
-   backend: LMDB
-   batch_size : 64
-  }
-}
-layer {
-  name: 'data'
-  type: 'Data'
-  top: 'data'
-  top: 'label'
-  include {
-    phase: TEST
- }
- transform_param {
-   mean_value: 127.5
-   mean_value: 127.5
-   mean_value: 127.5
-   scale: 0.0078125
-   mirror: true
- }
- data_param {
-   source: "/data/zeng/MsCeleb_112x96_val_lmdb"
-   backend: LMDB
-   batch_size : 20
-  }
-}
+input: "data"
+input_dim: 1
+input_dim: 3
+input_dim: 112
+input_dim: 96
 layer {
   name: "conv1a"
   bottom: "data"
@@ -854,25 +817,4 @@ layer {
      weight_filler { type: "xavier" std: 0.010 }
      bias_filler { type: "constant" value: 0 }
   }
-}
-layer {
-  name: "fc6"
-  type: "InnerProduct"
-  bottom: "fc5"
-  top: "fc6"
-  param { lr_mult: 1 decay_mult: 10 }
-  param { lr_mult: 2 decay_mult: 10 }
-  inner_product_param {
-     num_output: 76544
-     weight_filler { type: "xavier" std: 0.010 }
-     bias_filler { type: "constant" value: 0 }
-  }
-}
-layer {
-  name: "softmax_loss"
-  type: "SoftmaxWithLoss"
-  bottom: "fc6"
-  bottom: "label"
-  top: "softmax_loss"
-  loss_weight: 1
 }
