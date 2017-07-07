@@ -1,11 +1,42 @@
-88% wenet_original
-83.73% wenet_112x96_baseline
+
+----msceleb----
+93.6% 256x256 7.2 //conv pad=0
+92.7% 112x96 //conv1 pad=1
+
+
+
+----- webface----
++centerloss   112x96 wenet_original
+83.73% wenet_112x96_baseline // time=0.265
+83.6& wenet_112x96 // 1convp0
+
+
 80.9% wenet_112x96_depthwise
 81.0% wenet_112x96_depthwise_decay0 // scale decay0
 81.23% webet_112x96_depthwise_decay0_2 // depthwise decay0
-82.5% wenet_224x192 // k = 3
-82.8% wenet_224x192 // k = 8
-82.9% wenet_224x192 // k = 9
+82.0% wenet_112x96_depthwise_decay0_2_3th4th // only depthwise conv on 3th,4th conv block
+83.4% wenet_112x96_depthwise_4 // only 4th block time=0.225
+
+82.5% wenet_224x192 // k=3 s=2 p=1
+82.8% wenet_224x192 // k=8 s=2 p=1
+82.9% wenet_224x192 // k=9 s=2 p=1
+82.8% wenet_224x192 // k=6 s=2 p=0
+82.9% wenet_224x192 // k=5 s=2 p=1
 82.23% wenet_256x256
 
 
+----on going----
+----webface-----
+
+----msceleb-----
+172.31.234.253: msceleb+center+conv520+4thDepthwise
+224x192 with best param should not has lower performance than 112x96
+
+
+
+=============
+----speed----
+=============
+112x96 wenet_baseline 0.265s              --- 83.73%
+112x96 wenet_depthwise_4th 0.225s         --- 83.4%
+112x96 wenet_depthwise_3th,4th 0.206s     --- 82.0%

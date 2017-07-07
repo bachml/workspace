@@ -12,7 +12,7 @@ stepvalue: 56000
 stepvalue: 72000
 max_iter:  72000
 
-
+#debug_info: true
 display: 200
 momentum: 0.9
 weight_decay: 0.0005

@@ -7,7 +7,7 @@ task=Wen_ECCV
 #task=sparse_Wen
 
 #MODEL_HOME=/root/caffe/my_dirtywork/model
-CAFFE_HOME=/home/zeng/bn-caffe
+CAFFE_HOME=/home/zeng/caffe-center-dw
 
 ${CAFFE_HOME}/build/tools/caffe train \
   --solver=model/${task}/solver.prototxt -gpu all

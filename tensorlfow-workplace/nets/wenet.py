@@ -10,8 +10,10 @@ import tensorflow.contrib.slim as slim
 def bottleneck_group(inputs, num_output, outputs_collections=None, scope=None):
     with tf.variable_scope(scope, 'resnet_block', [inputs]) as sc:
         shortcut = slim.conv2d(inputs, num_output, [3, 3], stride=1, scope='conv1')
+        shortcut = slim.batch_norm(shortcut, scope='conv1_bn')
         shortcut = prelu(shortcut)
         shortcut = slim.conv2d(shortcut, num_output, [3, 3], stride=1, scope='conv2')
+        shortcut = slim.batch_norm(shortcut, scope='conv2_bn')
         shortcut = prelu(shortcut)
         output = inputs + shortcut
         return slim.utils.collect_named_outputs(outputs_collections, sc.original_name_scope, output)
