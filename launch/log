@@ -1,3 +1,8 @@
+-----msceleb2----
+224x192 
+256x256
++ taisauface
+
 
 ----msceleb----
 93.6% 256x256 7.2 //conv pad=0
@@ -29,10 +34,21 @@
 ----webface-----
 
 ----msceleb-----
-172.31.234.253: msceleb+center+conv520+4thDepthwise
-224x192 with best param should not has lower performance than 112x96
+--------gface7.2 256x256 93.6% (92.8%)
+--------gface7.4 256x256 93.8% (93.1%)
+------gface7.5-------
+conv 520 cen+dep: 92.9% 
+conv 920
+cen+dep: 
+cen+nod: 93.1%
+noc+dep: 92.5%
+noc+nod: 92.8%
 
-
+----224x192 noc + nop
+conv 
+620 93.0%
+720 92.7%
+820 92.8%
 
 =============
 ----speed----

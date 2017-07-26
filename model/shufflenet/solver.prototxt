@@ -1,0 +1,14 @@
+net: "model/shufflenet/trainval.prototxt"
+#test_initialization: false
+#test_iter: 100
+#test_interval: 5000
+display: 20
+average_loss: 40
+base_lr: 0.01
+lr_policy: "poly"
+power: 1.0
+max_iter: 28000
+momentum: 0.9
+weight_decay: 0.0001
+snapshot: 5000
+snapshot_prefix: "buffer_/shufflenet"
