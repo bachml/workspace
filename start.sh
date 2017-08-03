@@ -2,7 +2,7 @@
 
 #task=WuNet_mobile
 #task=depthwise_test
-task=shufflenet
+task=zengNet
 #task=wenet_force
 #task=sparse_Wen
 

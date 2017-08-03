@@ -14,7 +14,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/MsCeleb2_224x192_train_lmdb"
+   source: "/data/zeng/webface_224x192_full_train_lmdb"
    backend: LMDB
    batch_size : 64
   }
@@ -35,7 +35,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/MsCeleb2_224x192_val_lmdb"
+   source: "/data/zeng/webface_224x192_val_lmdb"
    backend: LMDB
    batch_size : 20
   }
@@ -49,7 +49,7 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 32
-    kernel_size: 5
+    kernel_size: 6
     stride: 2
     pad: 0
     group: 1
@@ -1000,14 +1000,14 @@ layer {
   }
 }
 layer {
-  name: "fc6"
+  name: "fc6_xxx"
   type: "InnerProduct"
   bottom: "fc5"
-  top: "fc6"
-  param { lr_mult: 1 decay_mult: 10 }
-  param { lr_mult: 2 decay_mult: 10 }
+  top: "fc6_xxx"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
-     num_output: 79077
+     num_output: 121042
      weight_filler { type: "xavier" std: 0.010 }
      bias_filler { type: "constant" value: 0 }
   }
@@ -1015,26 +1015,26 @@ layer {
 layer {
   name: "softmax_loss"
   type: "SoftmaxWithLoss"
-  bottom: "fc6"
+  bottom: "fc6_xxx"
   bottom: "label"
   top: "softmax_loss"
   loss_weight: 1
 }
 layer {
-  name: "center_loss"
+  name: "center_loss_xxx"
   type: "CenterLoss"
   bottom: "fc5"
   bottom: "label"
-  top: "center_loss"
+  top: "center_loss_xxx"
   param {
     lr_mult: 1
     decay_mult: 2
   }
   center_loss_param {
-    num_output: 79077
+    num_output: 121042
     center_filler {
       type: "xavier"
     }
   }
-  loss_weight: 0.000100
+  loss_weight: 0.0008
 }

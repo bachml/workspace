@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '/home/zeng/dp-caffe/python')
+sys.path.insert(0, '/home/zeng/myCaffe/python')
 import numpy as np
 import caffe
 import argparse
@@ -136,7 +136,7 @@ def util_countLine(path):
 if __name__ == "__main__":
 
     args = parse_args()
-    test_dataPath = "/home/zeng/data4my_dirtywork/id_rgb_224x192/"
+    test_dataPath = "/home/zeng/data4my_dirtywork/id_rgb_256/"
 
     deployNet_path =  args.task_path + '/deploy.prototxt'
     caffemodel_path = args.task_path + '/deploy.caffemodel'

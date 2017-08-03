@@ -1,0 +1,21 @@
+net: "model/zengNet/trainval.prototxt"
+#test_initialization: false
+test_iter: 100
+test_interval: 400
+display: 200
+#average_loss: 40
+base_lr: 0.01
+lr_policy: "multistep"
+gamma: 0.1
+
+
+stepvalue: 10000
+stepvalue: 20000
+stepvalue: 30000
+#stepvalue: 36000
+max_iter:  30000
+
+momentum: 0.9
+weight_decay: 0.01
+snapshot: 10000
+snapshot_prefix: "buffer_/zengNet"
