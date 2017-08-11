@@ -52,6 +52,11 @@ def metric_cosine(x1, x2):
 if __name__ == "__main__":
 
 
+    intra_dist = np.loadtxt('yitu_intra.txt')
+    extra_dist = np.loadtxt('yitu_extra.txt')
+    show_accuracy(intra_dist, extra_dist)
+
+    '''
     basepath = '/home/zeng/workspace/metric_results_/'
     name = "facenet"
     folder = "./"
@@ -81,4 +86,4 @@ if __name__ == "__main__":
     show_accuracy(intra_dist, extra_dist)
     np.save(basepath + args.task_name + "_dist_intra.npy", intra_dist)
     np.save(basepath + args.task_name + "_dist_extra.npy", extra_dist)
-
+    '''

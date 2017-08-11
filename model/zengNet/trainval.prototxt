@@ -14,7 +14,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/webface_256x256_train_lmdb"
+   source: "/data/zeng/MsCeleb_256x256_train_lmdb"
    backend: LMDB
    batch_size : 64
   }
@@ -35,7 +35,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/webface_256x256_val_lmdb"
+   source: "/data/zeng/MsCeleb_256x256_val_lmdb"
    backend: LMDB
    batch_size : 20
   }
@@ -56,29 +56,6 @@ layer {
     weight_filler { type: "msra" std: 0.010 }
     bias_filler { type: "constant" value: 0 }
     #engine: CAFFE
-  }
-}
-layer {
-  name: "conv1_bn"
-  bottom: "conv1"
-  top: "conv1"
-  type: "BatchNorm"
-  batch_norm_param {
-    use_global_stats: false
-  }
-  param { lr_mult: 0 decay_mult: 0}
-  param { lr_mult: 0 decay_mult: 0}
-  param { lr_mult: 0 decay_mult: 0}
-}
-layer {
-  name: "conv1_scale"
-  bottom: "conv1"
-  top: "conv1"
-  type: "Scale"
-  param { lr_mult: 0.1 decay_mult: 0}
-  param { lr_mult: 0.1 decay_mult: 0}
-  scale_param {
-    bias_term: true
   }
 }
 layer {
@@ -1578,24 +1555,15 @@ layer {
      bias_filler { type: "constant" value: 0 }
   }
 }
-layer{
-  name: "fc1_dropout"
-  type: "Dropout"
-  bottom: "fc1"
-  top: "fc1_dropout"
-  dropout_param {
-    dropout_ratio: 0
-  }
-}
 layer {
   name: "fc2"
   type: "InnerProduct"
-  bottom: "fc1_dropout"
+  bottom: "fc1"
   top: "fc2"
-  param { lr_mult: 1 decay_mult: 1 }
-  param { lr_mult: 2 decay_mult: 0 }
+  param { lr_mult: 1 decay_mult: 10 }
+  param { lr_mult: 2 decay_mult: 10 }
   inner_product_param {
-     num_output: 10572
+     num_output: 76544
      weight_filler { type: "xavier" std: 0.010 }
      bias_filler { type: "constant" value: 0 }
   }
