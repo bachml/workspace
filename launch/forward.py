@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '/home/zeng/caffe_wyd/python')
+sys.path.insert(0, '/home/zeng/lconv-sfm-caffe/python')
 import numpy as np
 import caffe
 import argparse
@@ -12,6 +12,12 @@ def parse_args():
 			help='image path')
     parser.add_argument('--pn', dest='prob_name', default=None, type=str,
 			help='prob path')
+    parser.add_argument('--h', dest='imageSize_h', default=256, type=int,
+                        help='image size ')
+
+    parser.add_argument('--w', dest='imageSize_w', default=256, type=int,
+                        help='image size ')
+
 
 
     if len(sys.argv) == 1:
@@ -52,17 +58,20 @@ if __name__ == "__main__":
     task_name = args.task_name
     imagePath = args.image_path
     prob_name = args.prob_name
+    img_h = args.imageSize_h
+    img_w = args.imageSize_w
 
     workspace_path = '/home/zeng/workspace/'
-    
-    trainNet_path =   task_name + "/deploy.prototxt"
-    caffemodel_path =  task_name + '/' + task_name + '.caffemodel'
+
+    trainNet_path =   '../task_/' + task_name + "/deploy.prototxt"
+    caffemodel_path =  '../task_/' + task_name + '/deploy.caffemodel'
 
 
     (net, transformer) = readDeepNet(trainNet_path, caffemodel_path)
-    
-    net.blobs['data'].reshape(1, 3, 256, 256)
-    net.blobs['data'].data[...] = transformer.preprocess('data', caffe.io.resize_image(caffe.io.load_image(imagePath, color=True),(256, 256)))
+
+    net.blobs['data'].reshape(1, 3, img_h, img_w)
+    net.blobs['data'].data[...] = transformer.preprocess('data', (caffe.io.load_image(imagePath, color=True)))
     out = net.forward()
     feat = net.blobs[prob_name].data[0] # 'fc160' is the layer name in caffemodel, edit this arguments base on your own model
-    print(feat)
+    np.save(prob_name+'_data', feat)
+    print(feat.shape)

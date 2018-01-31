@@ -6,6 +6,10 @@ launch_/
 donot_delete_model_/
 task_/
 metric_results_/
+lowrank_lconv_/
+backup_/
 *.txt
 *.mat
+*.private
+*.caffemodel
 push.sh

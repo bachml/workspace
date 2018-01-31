@@ -14,7 +14,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/webface_224x192_full_train_lmdb"
+   source: "/data/zeng/webface_256x256_train_lmdb"
    backend: LMDB
    batch_size : 64
   }
@@ -35,9 +35,9 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/webface_224x192_val_lmdb"
+   source: "/data/zeng/webface_256x256_val_lmdb"
    backend: LMDB
-   batch_size : 20
+   batch_size : 16
   }
 }
 layer {
@@ -49,7 +49,7 @@ layer {
   param { lr_mult: 2 decay_mult: 0 }
   convolution_param {
     num_output: 32
-    kernel_size: 6
+    kernel_size: 9
     stride: 2
     pad: 0
     group: 1
@@ -1007,7 +1007,7 @@ layer {
   param { lr_mult: 1 decay_mult: 1 }
   param { lr_mult: 2 decay_mult: 0 }
   inner_product_param {
-     num_output: 121042
+     num_output: 10572
      weight_filler { type: "xavier" std: 0.010 }
      bias_filler { type: "constant" value: 0 }
   }
@@ -1031,7 +1031,7 @@ layer {
     decay_mult: 2
   }
   center_loss_param {
-    num_output: 121042
+    num_output: 10572
     center_filler {
       type: "xavier"
     }

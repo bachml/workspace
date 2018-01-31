@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '/home/zeng/dp-caffe/python')
+sys.path.insert(0, '/home/zeng/myCaffe/python')
 import caffe
 proto = sys.argv[1]
 model = sys.argv[2]

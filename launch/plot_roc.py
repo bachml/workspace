@@ -37,7 +37,9 @@ if __name__ == "__main__":
     show_roc(folder_path, '7.4_dist_intra.npy', '7.4_dist_extra.npy','GFace7.4')
     show_roc(folder_path, 'pca_task_GFace7.5_dist_intra.npy', 'pca_task_GFace7.5_dist_extra.npy','GFace7.5')
     show_roc(folder_path, 'GFace7.6a_dist_intra.npy', 'GFace7.6a_dist_extra.npy','GFace7.6')
-    show_roc(folder_path, 'yitu_dist_intra.npy', 'yitu_dist_extra.npy','YituTect')
+    #show_roc(folder_path, 'yitu_dist_intra.npy', 'yitu_dist_extra.npy','YituTect')
+    show_roc(folder_path, 'task_7.7_ft_dist_intra.npy', 'task_7.7_ft_dist_extra.npy','GFace7.7')
+    show_roc(folder_path, 'ts2_dist_intra.npy', 'ts2_dist_extra.npy','GFace7.7.2')
 
 
     plt.xlabel('False positive rate')

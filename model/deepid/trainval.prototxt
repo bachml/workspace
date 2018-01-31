@@ -3,10 +3,10 @@ layer {
   name: "data"
   top: "data"
   top: "label"
-  type: "Data"
-  data_param {
-    source: "/data/zeng/celeba_glasses_128_train_lmdb"
-    backend:LMDB
+  type: "ImageData"
+  image_data_param {
+    source: "/data/zeng/celeba_gender_train.txt"
+    shuffle: true
     batch_size: 32
   }
   transform_param {
@@ -24,10 +24,10 @@ layer {
   name: "data"
   top: "data"
   top: "label"
-  type: "Data"
-  data_param {
-    source: "/data/zeng/celeba_glasses_128_val_lmdb"
-    backend:LMDB
+  type: "ImageData"
+  image_data_param {
+    source: "/data/zeng/celeba_gender_val.txt"
+    shuffle: true
     batch_size: 1
   }
   transform_param {

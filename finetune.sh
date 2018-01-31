@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-task=Wen_ECCV
+task=sphereface
 
 CAFFE_HOME=/home/zeng/myCaffe
 

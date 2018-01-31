@@ -1,0 +1,5918 @@
+layer {
+  name: 'data'
+  type: 'Data'
+  top: 'data'
+  top: 'label'
+  include {
+    phase: TRAIN
+ }
+ transform_param {
+   mean_value: 127.5
+   mean_value: 127.5
+   mean_value: 127.5
+   scale: 0.0078125
+   mirror: true
+ }
+ data_param {
+   source: "/data/zeng/webface_160x160_train_lmdb"
+   backend: LMDB
+   batch_size : 64
+  }
+}
+layer {
+  name: 'data'
+  type: 'Data'
+  top: 'data'
+  top: 'label'
+  include {
+    phase: TEST
+ }
+ transform_param {
+   mean_value: 127.5
+   mean_value: 127.5
+   mean_value: 127.5
+   scale: 0.0078125
+   mirror: true
+ }
+ data_param {
+   source: "/data/zeng/webface_160x160_val_lmdb"
+   backend: LMDB
+   batch_size : 16
+  }
+}
+layer {
+  name: "stem/conv1"
+  bottom: "data"
+  top: "stem/conv1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 2
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "stem/conv1_bn"
+  type: "BatchNorm"
+  bottom: "stem/conv1"
+  top: "stem/conv1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "stem/conv1_scale"
+  type: "Scale"
+  bottom: "stem/conv1"
+  top: "stem/conv1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "stem/conv1_relu"
+  type: "ReLU"
+  bottom: "stem/conv1"
+  top: "stem/conv1"
+}
+layer {
+  name: "stem/conv2"
+  bottom: "stem/conv1"
+  top: "stem/conv2"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "stem/conv2_bn"
+  type: "BatchNorm"
+  bottom: "stem/conv2"
+  top: "stem/conv2"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "stem/conv2_scale"
+  type: "Scale"
+  bottom: "stem/conv2"
+  top: "stem/conv2"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "stem/conv2_relu"
+  type: "ReLU"
+  bottom: "stem/conv2"
+  top: "stem/conv2"
+}
+layer {
+  name: "stem/conv3"
+  bottom: "stem/conv2"
+  top: "stem/conv3"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 64
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "stem/conv3_bn"
+  type: "BatchNorm"
+  bottom: "stem/conv3"
+  top: "stem/conv3"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "stem/conv3_scale"
+  type: "Scale"
+  bottom: "stem/conv3"
+  top: "stem/conv3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "stem/conv3_relu"
+  type: "ReLU"
+  bottom: "stem/conv3"
+  top: "stem/conv3"
+}
+layer {
+  name: "stem/pool1"
+  bottom: "stem/conv3"
+  top: "stem/pool1"
+  type: "Pooling"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "stem/conv4"
+  bottom: "stem/pool1"
+  top: "stem/conv4"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 80
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "stem/conv4_bn"
+  type: "BatchNorm"
+  bottom: "stem/conv4"
+  top: "stem/conv4"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "stem/conv4_scale"
+  type: "Scale"
+  bottom: "stem/conv4"
+  top: "stem/conv4"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "stem/conv4_relu"
+  type: "ReLU"
+  bottom: "stem/conv4"
+  top: "stem/conv4"
+}
+layer {
+  name: "stem/conv5"
+  bottom: "stem/conv4"
+  top: "stem/conv5"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "stem/conv5_bn"
+  type: "BatchNorm"
+  bottom: "stem/conv5"
+  top: "stem/conv5"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "stem/conv5_scale"
+  type: "Scale"
+  bottom: "stem/conv5"
+  top: "stem/conv5"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "stem/conv5_relu"
+  type: "ReLU"
+  bottom: "stem/conv5"
+  top: "stem/conv5"
+}
+layer {
+  name: "stem/conv6"
+  bottom: "stem/conv5"
+  top: "stem/conv6"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 3
+    stride: 2
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "stem/conv6_bn"
+  type: "BatchNorm"
+  bottom: "stem/conv6"
+  top: "stem/conv6"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "stem/conv6_scale"
+  type: "Scale"
+  bottom: "stem/conv6"
+  top: "stem/conv6"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "stem/conv6_relu"
+  type: "ReLU"
+  bottom: "stem/conv6"
+  top: "stem/conv6"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/1b/1x1"
+  bottom: "stem/conv6"
+  top: "inception_resnet_v1_blockA/conv1/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv1/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv1/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv1/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv1/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv1/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv1/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/2b/1x1"
+  bottom: "stem/conv6"
+  top: "inception_resnet_v1_blockA/conv1/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv1/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv1/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv1/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/2b/3x3"
+  bottom: "inception_resnet_v1_blockA/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv1/2b/3x3"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/2b/3x3_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv1/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv1/2b/3x3"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/2b/3x3_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv1/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv1/2b/3x3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/2b/3x3_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv1/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv1/2b/3x3"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/1x1"
+  bottom: "stem/conv6"
+  top: "inception_resnet_v1_blockA/conv1/3b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv1/3b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv1/3b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv1/3b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/3x3_a"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv1/3b/3x3_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/3x3_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv1/3b/3x3_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/3x3_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv1/3b/3x3_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/3x3_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv1/3b/3x3_a"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/3x3_b"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv1/3b/3x3_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/3x3_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv1/3b/3x3_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/3x3_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv1/3b/3x3_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/3b/3x3_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv1/3b/3x3_b"
+}
+layer{
+  name: "inception_resnet_v1_blockA/conv1/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockA/conv1/1b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv1/2b/3x3"
+  bottom: "inception_resnet_v1_blockA/conv1/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv1/concat"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/conv_up"
+  bottom: "inception_resnet_v1_blockA/conv1/concat"
+  top: "inception_resnet_v1_blockA/conv1/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/eltwise"
+  bottom: "stem/conv6"
+  bottom: "inception_resnet_v1_blockA/conv1/conv_up"
+  top: "inception_resnet_v1_blockA/conv1/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.170
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv1/ReLU"
+  bottom: "inception_resnet_v1_blockA/conv1/eltwise"
+  top: "inception_resnet_v1_blockA/conv1/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/1b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv1/eltwise"
+  top: "inception_resnet_v1_blockA/conv2/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv2/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv2/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv2/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv2/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv2/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv2/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/2b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv1/eltwise"
+  top: "inception_resnet_v1_blockA/conv2/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv2/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv2/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv2/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/2b/3x3"
+  bottom: "inception_resnet_v1_blockA/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv2/2b/3x3"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/2b/3x3_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv2/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv2/2b/3x3"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/2b/3x3_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv2/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv2/2b/3x3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/2b/3x3_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv2/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv2/2b/3x3"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv1/eltwise"
+  top: "inception_resnet_v1_blockA/conv2/3b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv2/3b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv2/3b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv2/3b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/3x3_a"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv2/3b/3x3_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/3x3_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv2/3b/3x3_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/3x3_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv2/3b/3x3_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/3x3_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv2/3b/3x3_a"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/3x3_b"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv2/3b/3x3_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/3x3_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv2/3b/3x3_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/3x3_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv2/3b/3x3_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/3b/3x3_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv2/3b/3x3_b"
+}
+layer{
+  name: "inception_resnet_v1_blockA/conv2/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockA/conv2/1b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv2/2b/3x3"
+  bottom: "inception_resnet_v1_blockA/conv2/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv2/concat"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/conv_up"
+  bottom: "inception_resnet_v1_blockA/conv2/concat"
+  top: "inception_resnet_v1_blockA/conv2/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/eltwise"
+  bottom: "inception_resnet_v1_blockA/conv1/eltwise"
+  bottom: "inception_resnet_v1_blockA/conv2/conv_up"
+  top: "inception_resnet_v1_blockA/conv2/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.170
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv2/ReLU"
+  bottom: "inception_resnet_v1_blockA/conv2/eltwise"
+  top: "inception_resnet_v1_blockA/conv2/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/1b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv2/eltwise"
+  top: "inception_resnet_v1_blockA/conv3/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv3/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv3/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv3/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv3/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv3/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv3/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/2b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv2/eltwise"
+  top: "inception_resnet_v1_blockA/conv3/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv3/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv3/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv3/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/2b/3x3"
+  bottom: "inception_resnet_v1_blockA/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv3/2b/3x3"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/2b/3x3_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv3/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv3/2b/3x3"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/2b/3x3_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv3/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv3/2b/3x3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/2b/3x3_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv3/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv3/2b/3x3"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv2/eltwise"
+  top: "inception_resnet_v1_blockA/conv3/3b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv3/3b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv3/3b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv3/3b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/3x3_a"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv3/3b/3x3_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/3x3_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv3/3b/3x3_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/3x3_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv3/3b/3x3_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/3x3_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv3/3b/3x3_a"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/3x3_b"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv3/3b/3x3_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/3x3_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv3/3b/3x3_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/3x3_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv3/3b/3x3_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/3b/3x3_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv3/3b/3x3_b"
+}
+layer{
+  name: "inception_resnet_v1_blockA/conv3/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockA/conv3/1b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv3/2b/3x3"
+  bottom: "inception_resnet_v1_blockA/conv3/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv3/concat"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/conv_up"
+  bottom: "inception_resnet_v1_blockA/conv3/concat"
+  top: "inception_resnet_v1_blockA/conv3/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/eltwise"
+  bottom: "inception_resnet_v1_blockA/conv2/eltwise"
+  bottom: "inception_resnet_v1_blockA/conv3/conv_up"
+  top: "inception_resnet_v1_blockA/conv3/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.170
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv3/ReLU"
+  bottom: "inception_resnet_v1_blockA/conv3/eltwise"
+  top: "inception_resnet_v1_blockA/conv3/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/1b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv3/eltwise"
+  top: "inception_resnet_v1_blockA/conv4/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv4/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv4/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv4/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv4/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv4/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv4/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/2b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv3/eltwise"
+  top: "inception_resnet_v1_blockA/conv4/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv4/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv4/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv4/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/2b/3x3"
+  bottom: "inception_resnet_v1_blockA/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv4/2b/3x3"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/2b/3x3_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv4/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv4/2b/3x3"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/2b/3x3_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv4/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv4/2b/3x3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/2b/3x3_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv4/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv4/2b/3x3"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv3/eltwise"
+  top: "inception_resnet_v1_blockA/conv4/3b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv4/3b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv4/3b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv4/3b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/3x3_a"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv4/3b/3x3_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/3x3_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv4/3b/3x3_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/3x3_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv4/3b/3x3_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/3x3_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv4/3b/3x3_a"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/3x3_b"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv4/3b/3x3_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/3x3_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv4/3b/3x3_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/3x3_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv4/3b/3x3_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/3b/3x3_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv4/3b/3x3_b"
+}
+layer{
+  name: "inception_resnet_v1_blockA/conv4/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockA/conv4/1b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv4/2b/3x3"
+  bottom: "inception_resnet_v1_blockA/conv4/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv4/concat"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/conv_up"
+  bottom: "inception_resnet_v1_blockA/conv4/concat"
+  top: "inception_resnet_v1_blockA/conv4/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/eltwise"
+  bottom: "inception_resnet_v1_blockA/conv3/eltwise"
+  bottom: "inception_resnet_v1_blockA/conv4/conv_up"
+  top: "inception_resnet_v1_blockA/conv4/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.170
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv4/ReLU"
+  bottom: "inception_resnet_v1_blockA/conv4/eltwise"
+  top: "inception_resnet_v1_blockA/conv4/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/1b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv4/eltwise"
+  top: "inception_resnet_v1_blockA/conv5/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv5/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv5/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv5/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv5/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv5/1b/1x1"
+  top: "inception_resnet_v1_blockA/conv5/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/2b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv4/eltwise"
+  top: "inception_resnet_v1_blockA/conv5/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv5/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv5/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv5/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/2b/3x3"
+  bottom: "inception_resnet_v1_blockA/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockA/conv5/2b/3x3"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/2b/3x3_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv5/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv5/2b/3x3"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/2b/3x3_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv5/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv5/2b/3x3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/2b/3x3_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv5/2b/3x3"
+  top: "inception_resnet_v1_blockA/conv5/2b/3x3"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv4/eltwise"
+  top: "inception_resnet_v1_blockA/conv5/3b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv5/3b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv5/3b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv5/3b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/3x3_a"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/1x1"
+  top: "inception_resnet_v1_blockA/conv5/3b/3x3_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/3x3_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv5/3b/3x3_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/3x3_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv5/3b/3x3_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/3x3_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv5/3b/3x3_a"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/3x3_b"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/3x3_a"
+  top: "inception_resnet_v1_blockA/conv5/3b/3x3_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/3x3_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv5/3b/3x3_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/3x3_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv5/3b/3x3_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/3b/3x3_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv5/3b/3x3_b"
+}
+layer{
+  name: "inception_resnet_v1_blockA/conv5/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockA/conv5/1b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv5/2b/3x3"
+  bottom: "inception_resnet_v1_blockA/conv5/3b/3x3_b"
+  top: "inception_resnet_v1_blockA/conv5/concat"
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/conv_up"
+  bottom: "inception_resnet_v1_blockA/conv5/concat"
+  top: "inception_resnet_v1_blockA/conv5/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/eltwise"
+  bottom: "inception_resnet_v1_blockA/conv4/eltwise"
+  bottom: "inception_resnet_v1_blockA/conv5/conv_up"
+  top: "inception_resnet_v1_blockA/conv5/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.170
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockA/conv5/ReLU"
+  bottom: "inception_resnet_v1_blockA/conv5/eltwise"
+  top: "inception_resnet_v1_blockA/conv5/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3"
+  bottom: "inception_resnet_v1_blockA/conv5/eltwise"
+  top: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 384
+    kernel_size: 3
+    stride: 2
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3"
+  top: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3"
+  top: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3"
+  top: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3"
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1"
+  bottom: "inception_resnet_v1_blockA/conv5/eltwise"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/1x1"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a"
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_a"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 384
+    kernel_size: 3
+    stride: 2
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b"
+  top: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b"
+}
+layer {
+  name: "inception_resnet_v1_reduction_A/reduction_A/pooling"
+  bottom: "inception_resnet_v1_blockA/conv5/eltwise"
+  top: "inception_resnet_v1_reduction_A/reduction_A/pooling"
+  type: "Pooling"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer{
+  name: "inception_resnet_v1_reduction_A/reduction_A/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/1b/3x3"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/2b/3x3_b"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/pooling"
+  top: "inception_resnet_v1_reduction_A/reduction_A/concat"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/1b/1x1"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/concat"
+  top: "inception_resnet_v1_blockB/conv1/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv1/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv1/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv1/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv1/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv1/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv1/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/1x1"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/concat"
+  top: "inception_resnet_v1_blockB/conv1/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv1/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv1/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv1/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/rec_a"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv1/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 3
+    kernel_h: 1
+    kernel_w: 7
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv1/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv1/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv1/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/rec_b"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv1/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 3
+    pad_w: 0
+    kernel_h: 7
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv1/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv1/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv1/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockB/conv1/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv1/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv1/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/conv_up"
+  bottom: "inception_resnet_v1_blockB/conv1/concat"
+  top: "inception_resnet_v1_blockB/conv1/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1024
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/eltwise"
+  bottom: "inception_resnet_v1_reduction_A/reduction_A/concat"
+  bottom: "inception_resnet_v1_blockB/conv1/conv_up"
+  top: "inception_resnet_v1_blockB/conv1/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.100
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv1/ReLU"
+  bottom: "inception_resnet_v1_blockB/conv1/eltwise"
+  top: "inception_resnet_v1_blockB/conv1/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv1/eltwise"
+  top: "inception_resnet_v1_blockB/conv2/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv2/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv2/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv2/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv2/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv2/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv2/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv1/eltwise"
+  top: "inception_resnet_v1_blockB/conv2/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv2/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv2/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv2/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/rec_a"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv2/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 3
+    kernel_h: 1
+    kernel_w: 7
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv2/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv2/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv2/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/rec_b"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv2/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 3
+    pad_w: 0
+    kernel_h: 7
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv2/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv2/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv2/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockB/conv2/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv2/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv2/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/conv_up"
+  bottom: "inception_resnet_v1_blockB/conv2/concat"
+  top: "inception_resnet_v1_blockB/conv2/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1024
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv1/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv2/conv_up"
+  top: "inception_resnet_v1_blockB/conv2/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.100
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv2/ReLU"
+  bottom: "inception_resnet_v1_blockB/conv2/eltwise"
+  top: "inception_resnet_v1_blockB/conv2/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv2/eltwise"
+  top: "inception_resnet_v1_blockB/conv3/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv3/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv3/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv3/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv3/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv3/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv3/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv2/eltwise"
+  top: "inception_resnet_v1_blockB/conv3/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv3/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv3/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv3/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/rec_a"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv3/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 3
+    kernel_h: 1
+    kernel_w: 7
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv3/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv3/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv3/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/rec_b"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv3/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 3
+    pad_w: 0
+    kernel_h: 7
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv3/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv3/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv3/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockB/conv3/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv3/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv3/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/conv_up"
+  bottom: "inception_resnet_v1_blockB/conv3/concat"
+  top: "inception_resnet_v1_blockB/conv3/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1024
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv2/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv3/conv_up"
+  top: "inception_resnet_v1_blockB/conv3/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.100
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv3/ReLU"
+  bottom: "inception_resnet_v1_blockB/conv3/eltwise"
+  top: "inception_resnet_v1_blockB/conv3/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv3/eltwise"
+  top: "inception_resnet_v1_blockB/conv4/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv4/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv4/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv4/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv4/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv4/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv4/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv3/eltwise"
+  top: "inception_resnet_v1_blockB/conv4/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv4/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv4/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv4/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/rec_a"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv4/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 3
+    kernel_h: 1
+    kernel_w: 7
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv4/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv4/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv4/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/rec_b"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv4/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 3
+    pad_w: 0
+    kernel_h: 7
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv4/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv4/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv4/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockB/conv4/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv4/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv4/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/conv_up"
+  bottom: "inception_resnet_v1_blockB/conv4/concat"
+  top: "inception_resnet_v1_blockB/conv4/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1024
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv3/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv4/conv_up"
+  top: "inception_resnet_v1_blockB/conv4/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.100
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv4/ReLU"
+  bottom: "inception_resnet_v1_blockB/conv4/eltwise"
+  top: "inception_resnet_v1_blockB/conv4/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv4/eltwise"
+  top: "inception_resnet_v1_blockB/conv5/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv5/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv5/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv5/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv5/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv5/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv5/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv4/eltwise"
+  top: "inception_resnet_v1_blockB/conv5/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv5/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv5/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv5/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/rec_a"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv5/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 3
+    kernel_h: 1
+    kernel_w: 7
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv5/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv5/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv5/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/rec_b"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv5/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 3
+    pad_w: 0
+    kernel_h: 7
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv5/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv5/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv5/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockB/conv5/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv5/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv5/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/conv_up"
+  bottom: "inception_resnet_v1_blockB/conv5/concat"
+  top: "inception_resnet_v1_blockB/conv5/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1024
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv4/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv5/conv_up"
+  top: "inception_resnet_v1_blockB/conv5/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.100
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv5/ReLU"
+  bottom: "inception_resnet_v1_blockB/conv5/eltwise"
+  top: "inception_resnet_v1_blockB/conv5/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv5/eltwise"
+  top: "inception_resnet_v1_blockB/conv6/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv6/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv6/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv6/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv6/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv6/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv6/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv5/eltwise"
+  top: "inception_resnet_v1_blockB/conv6/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv6/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv6/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv6/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/rec_a"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv6/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 3
+    kernel_h: 1
+    kernel_w: 7
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv6/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv6/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv6/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/rec_b"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv6/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 3
+    pad_w: 0
+    kernel_h: 7
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv6/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv6/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv6/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockB/conv6/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv6/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv6/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/conv_up"
+  bottom: "inception_resnet_v1_blockB/conv6/concat"
+  top: "inception_resnet_v1_blockB/conv6/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1024
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv5/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv6/conv_up"
+  top: "inception_resnet_v1_blockB/conv6/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.100
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv6/ReLU"
+  bottom: "inception_resnet_v1_blockB/conv6/eltwise"
+  top: "inception_resnet_v1_blockB/conv6/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv6/eltwise"
+  top: "inception_resnet_v1_blockB/conv7/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv7/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv7/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv7/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv7/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv7/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv7/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv6/eltwise"
+  top: "inception_resnet_v1_blockB/conv7/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv7/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv7/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv7/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/rec_a"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv7/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 3
+    kernel_h: 1
+    kernel_w: 7
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv7/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv7/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv7/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/rec_b"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv7/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 3
+    pad_w: 0
+    kernel_h: 7
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv7/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv7/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv7/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockB/conv7/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv7/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv7/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/conv_up"
+  bottom: "inception_resnet_v1_blockB/conv7/concat"
+  top: "inception_resnet_v1_blockB/conv7/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1024
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv6/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv7/conv_up"
+  top: "inception_resnet_v1_blockB/conv7/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.100
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv7/ReLU"
+  bottom: "inception_resnet_v1_blockB/conv7/eltwise"
+  top: "inception_resnet_v1_blockB/conv7/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv7/eltwise"
+  top: "inception_resnet_v1_blockB/conv8/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv8/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv8/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv8/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv8/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv8/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv8/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv7/eltwise"
+  top: "inception_resnet_v1_blockB/conv8/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv8/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv8/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv8/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/rec_a"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv8/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 3
+    kernel_h: 1
+    kernel_w: 7
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv8/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv8/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv8/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/rec_b"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv8/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 3
+    pad_w: 0
+    kernel_h: 7
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv8/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv8/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv8/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockB/conv8/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv8/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv8/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/conv_up"
+  bottom: "inception_resnet_v1_blockB/conv8/concat"
+  top: "inception_resnet_v1_blockB/conv8/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1024
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv7/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv8/conv_up"
+  top: "inception_resnet_v1_blockB/conv8/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.100
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv8/ReLU"
+  bottom: "inception_resnet_v1_blockB/conv8/eltwise"
+  top: "inception_resnet_v1_blockB/conv8/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv8/eltwise"
+  top: "inception_resnet_v1_blockB/conv9/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv9/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv9/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv9/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv9/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv9/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv9/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv8/eltwise"
+  top: "inception_resnet_v1_blockB/conv9/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv9/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv9/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv9/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/rec_a"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv9/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 3
+    kernel_h: 1
+    kernel_w: 7
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv9/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv9/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv9/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/rec_b"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv9/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 3
+    pad_w: 0
+    kernel_h: 7
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv9/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv9/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv9/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockB/conv9/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv9/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv9/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/conv_up"
+  bottom: "inception_resnet_v1_blockB/conv9/concat"
+  top: "inception_resnet_v1_blockB/conv9/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1024
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv8/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv9/conv_up"
+  top: "inception_resnet_v1_blockB/conv9/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.100
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv9/ReLU"
+  bottom: "inception_resnet_v1_blockB/conv9/eltwise"
+  top: "inception_resnet_v1_blockB/conv9/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv9/eltwise"
+  top: "inception_resnet_v1_blockB/conv10/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv10/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv10/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv10/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv10/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv10/1b/1x1"
+  top: "inception_resnet_v1_blockB/conv10/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv9/eltwise"
+  top: "inception_resnet_v1_blockB/conv10/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv10/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv10/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv10/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/rec_a"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/1x1"
+  top: "inception_resnet_v1_blockB/conv10/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 3
+    kernel_h: 1
+    kernel_w: 7
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv10/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv10/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv10/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/rec_b"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/rec_a"
+  top: "inception_resnet_v1_blockB/conv10/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 128
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 3
+    pad_w: 0
+    kernel_h: 7
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv10/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv10/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv10/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockB/conv10/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv10/2b/rec_b"
+  top: "inception_resnet_v1_blockB/conv10/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/conv_up"
+  bottom: "inception_resnet_v1_blockB/conv10/concat"
+  top: "inception_resnet_v1_blockB/conv10/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1024
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv9/eltwise"
+  bottom: "inception_resnet_v1_blockB/conv10/conv_up"
+  top: "inception_resnet_v1_blockB/conv10/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.100
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockB/conv10/ReLU"
+  bottom: "inception_resnet_v1_blockB/conv10/eltwise"
+  top: "inception_resnet_v1_blockB/conv10/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv10/eltwise"
+  top: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/1b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 384
+    kernel_size: 3
+    stride: 2
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3"
+  top: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3"
+  top: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3"
+  top: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3"
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv10/eltwise"
+  top: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/2b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 3
+    stride: 2
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a"
+  top: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a"
+  top: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a"
+  top: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a"
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1"
+  bottom: "inception_resnet_v1_blockB/conv10/eltwise"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/1x1"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a"
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_a"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 256
+    kernel_size: 3
+    stride: 2
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b"
+  top: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b"
+}
+layer {
+  name: "inception_resnet_v1_reduction_B/reduction_B/pooling"
+  bottom: "inception_resnet_v1_blockB/conv10/eltwise"
+  top: "inception_resnet_v1_reduction_B/reduction_B/pooling"
+  type: "Pooling"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer{
+  name: "inception_resnet_v1_reduction_B/reduction_B/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/1b/3x3"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/2b/3x3_a"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/3b/3x3_b"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/pooling"
+  top: "inception_resnet_v1_reduction_B/reduction_B/concat"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/1b/1x1"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/concat"
+  top: "inception_resnet_v1_blockC/conv1/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv1/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv1/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv1/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv1/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv1/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv1/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/1x1"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/concat"
+  top: "inception_resnet_v1_blockC/conv1/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv1/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv1/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv1/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/rec_a"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv1/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 1
+    kernel_h: 1
+    kernel_w: 3
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv1/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv1/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv1/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/rec_b"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv1/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 1
+    pad_w: 0
+    kernel_h: 3
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv1/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv1/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv1/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockC/conv1/1b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv1/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv1/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/conv_up"
+  bottom: "inception_resnet_v1_blockC/conv1/concat"
+  top: "inception_resnet_v1_blockC/conv1/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1920
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/eltwise"
+  bottom: "inception_resnet_v1_reduction_B/reduction_B/concat"
+  bottom: "inception_resnet_v1_blockC/conv1/conv_up"
+  top: "inception_resnet_v1_blockC/conv1/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.200
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv1/ReLU"
+  bottom: "inception_resnet_v1_blockC/conv1/eltwise"
+  top: "inception_resnet_v1_blockC/conv1/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/1b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv1/eltwise"
+  top: "inception_resnet_v1_blockC/conv2/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv2/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv2/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv2/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv2/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv2/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv2/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv1/eltwise"
+  top: "inception_resnet_v1_blockC/conv2/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv2/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv2/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv2/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/rec_a"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv2/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 1
+    kernel_h: 1
+    kernel_w: 3
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv2/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv2/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv2/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/rec_b"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv2/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 1
+    pad_w: 0
+    kernel_h: 3
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv2/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv2/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv2/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockC/conv2/1b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv2/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv2/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/conv_up"
+  bottom: "inception_resnet_v1_blockC/conv2/concat"
+  top: "inception_resnet_v1_blockC/conv2/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1920
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/eltwise"
+  bottom: "inception_resnet_v1_blockC/conv1/eltwise"
+  bottom: "inception_resnet_v1_blockC/conv2/conv_up"
+  top: "inception_resnet_v1_blockC/conv2/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.200
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv2/ReLU"
+  bottom: "inception_resnet_v1_blockC/conv2/eltwise"
+  top: "inception_resnet_v1_blockC/conv2/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/1b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv2/eltwise"
+  top: "inception_resnet_v1_blockC/conv3/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv3/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv3/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv3/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv3/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv3/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv3/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv2/eltwise"
+  top: "inception_resnet_v1_blockC/conv3/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv3/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv3/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv3/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/rec_a"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv3/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 1
+    kernel_h: 1
+    kernel_w: 3
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv3/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv3/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv3/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/rec_b"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv3/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 1
+    pad_w: 0
+    kernel_h: 3
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv3/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv3/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv3/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockC/conv3/1b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv3/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv3/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/conv_up"
+  bottom: "inception_resnet_v1_blockC/conv3/concat"
+  top: "inception_resnet_v1_blockC/conv3/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1920
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/eltwise"
+  bottom: "inception_resnet_v1_blockC/conv2/eltwise"
+  bottom: "inception_resnet_v1_blockC/conv3/conv_up"
+  top: "inception_resnet_v1_blockC/conv3/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.200
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv3/ReLU"
+  bottom: "inception_resnet_v1_blockC/conv3/eltwise"
+  top: "inception_resnet_v1_blockC/conv3/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/1b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv3/eltwise"
+  top: "inception_resnet_v1_blockC/conv4/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv4/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv4/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv4/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv4/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv4/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv4/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv3/eltwise"
+  top: "inception_resnet_v1_blockC/conv4/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv4/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv4/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv4/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/rec_a"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv4/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 1
+    kernel_h: 1
+    kernel_w: 3
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv4/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv4/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv4/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/rec_b"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv4/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 1
+    pad_w: 0
+    kernel_h: 3
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv4/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv4/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv4/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockC/conv4/1b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv4/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv4/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/conv_up"
+  bottom: "inception_resnet_v1_blockC/conv4/concat"
+  top: "inception_resnet_v1_blockC/conv4/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1920
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/eltwise"
+  bottom: "inception_resnet_v1_blockC/conv3/eltwise"
+  bottom: "inception_resnet_v1_blockC/conv4/conv_up"
+  top: "inception_resnet_v1_blockC/conv4/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.200
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv4/ReLU"
+  bottom: "inception_resnet_v1_blockC/conv4/eltwise"
+  top: "inception_resnet_v1_blockC/conv4/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/1b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv4/eltwise"
+  top: "inception_resnet_v1_blockC/conv5/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv5/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv5/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv5/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv5/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv5/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv5/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv4/eltwise"
+  top: "inception_resnet_v1_blockC/conv5/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv5/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv5/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv5/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/rec_a"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv5/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 1
+    kernel_h: 1
+    kernel_w: 3
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv5/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv5/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv5/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/rec_b"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv5/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 1
+    pad_w: 0
+    kernel_h: 3
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv5/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv5/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv5/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockC/conv5/1b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv5/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv5/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/conv_up"
+  bottom: "inception_resnet_v1_blockC/conv5/concat"
+  top: "inception_resnet_v1_blockC/conv5/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1920
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/eltwise"
+  bottom: "inception_resnet_v1_blockC/conv4/eltwise"
+  bottom: "inception_resnet_v1_blockC/conv5/conv_up"
+  top: "inception_resnet_v1_blockC/conv5/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.200
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv5/ReLU"
+  bottom: "inception_resnet_v1_blockC/conv5/eltwise"
+  top: "inception_resnet_v1_blockC/conv5/eltwise"
+  type: "ReLU"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/1b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv5/eltwise"
+  top: "inception_resnet_v1_blockC/conv6/1b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/1b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv6/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv6/1b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/1b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv6/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv6/1b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/1b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv6/1b/1x1"
+  top: "inception_resnet_v1_blockC/conv6/1b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv5/eltwise"
+  top: "inception_resnet_v1_blockC/conv6/2b/1x1"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/1x1_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv6/2b/1x1"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/1x1_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv6/2b/1x1"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/1x1_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv6/2b/1x1"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/rec_a"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/1x1"
+  top: "inception_resnet_v1_blockC/conv6/2b/rec_a"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 0
+    pad_w: 1
+    kernel_h: 1
+    kernel_w: 3
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/rec_a_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv6/2b/rec_a"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/rec_a_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv6/2b/rec_a"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/rec_a_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv6/2b/rec_a"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/rec_b"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/rec_a"
+  top: "inception_resnet_v1_blockC/conv6/2b/rec_b"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 192
+    stride: 1
+    group: 1
+    weight_filler { type: "xavier" std: 0.010 }
+    bias_filler { type: "constant" value: 0 }
+    #engine: CAFFE
+    pad_h: 1
+    pad_w: 0
+    kernel_h: 3
+    kernel_w: 1
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/rec_b_bn"
+  type: "BatchNorm"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv6/2b/rec_b"
+  batch_norm_param {
+    use_global_stats: false
+    eps: 0.001
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/rec_b_scale"
+  type: "Scale"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv6/2b/rec_b"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/2b/rec_b_relu"
+  type: "ReLU"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv6/2b/rec_b"
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/concat"
+  type: "Concat"
+  bottom: "inception_resnet_v1_blockC/conv6/1b/1x1"
+  bottom: "inception_resnet_v1_blockC/conv6/2b/rec_b"
+  top: "inception_resnet_v1_blockC/conv6/concat"
+
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/conv_up"
+  bottom: "inception_resnet_v1_blockC/conv6/concat"
+  top: "inception_resnet_v1_blockC/conv6/conv_up"
+  type: "Convolution"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  convolution_param {
+    num_output: 1920
+    kernel_size: 1
+    stride: 1
+    pad: 0
+    group: 1
+    weight_filler { type: "xavier" std: 0.200 }
+    bias_filler { type: "constant" value: 0.010 }
+    #engine: CAFFE
+  }
+}
+layer {
+  name: "inception_resnet_v1_blockC/conv6/eltwise"
+  bottom: "inception_resnet_v1_blockC/conv5/eltwise"
+  bottom: "inception_resnet_v1_blockC/conv6/conv_up"
+  top: "inception_resnet_v1_blockC/conv6/eltwise"
+  type: "Eltwise"
+  eltwise_param {
+    operation: 1
+    coeff: 1.000
+    coeff: 0.100
+  }
+}
+layer {
+  name: "GAP"
+  bottom: "inception_resnet_v1_blockC/conv6/eltwise"
+  top: "GAP"
+  type: "Pooling"
+  pooling_param {
+    pool: AVE
+    global_pooling: true
+  }
+}
+layer{
+  name: "dropout"
+  type: "Dropout"
+  bottom: "GAP"
+  top: "GAP_dropout"
+  dropout_param {
+    dropout_ratio: 0.200
+  }
+}
+#layer {
+#  name: "fc1"
+#  type: "InnerProduct"
+#  bottom: "GAP"
+#  top: "fc1"
+#  param { lr_mult: 1 decay_mult: 1 }
+#  param { lr_mult: 2 decay_mult: 0 }
+#  inner_product_param {
+#     num_output: 128
+#     weight_filler { type: "xavier" std: 0.010 }
+#     bias_filler { type: "constant" value: 0 }
+#  }
+#}
+layer {
+  name: "fc2"
+  type: "InnerProduct"
+  bottom: "GAP_dropout"
+  top: "fc2"
+  param { lr_mult: 1 decay_mult: 1 }
+  param { lr_mult: 2 decay_mult: 0 }
+  inner_product_param {
+     num_output: 10572
+     weight_filler { type: "xavier" std: 0.010 }
+     bias_filler { type: "constant" value: 0 }
+  }
+}
+layer {
+  name: "softmax_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc2"
+  bottom: "label"
+  top: "softmax_loss"
+  loss_weight: 1
+}
+layer {
+  name: "center_loss"
+  type: "CenterLoss"
+  bottom: "GAP"
+  bottom: "label"
+  top: "center_loss"
+  param {
+    lr_mult: 1
+    decay_mult: 2
+  }
+  center_loss_param {
+    num_output: 10572
+    center_filler {
+      type: "xavier"
+    }
+  }
+  loss_weight: 0.008
+}

@@ -14,7 +14,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/MsCeleb_256x256_train_lmdb"
+   source: "/data/zeng/webface_256x256_train_lmdb"
    backend: LMDB
    batch_size : 64
   }
@@ -35,7 +35,7 @@ layer {
    mirror: true
  }
  data_param {
-   source: "/data/zeng/MsCeleb_256x256_val_lmdb"
+   source: "/data/zeng/webface_256x256_val_lmdb"
    backend: LMDB
    batch_size : 20
   }

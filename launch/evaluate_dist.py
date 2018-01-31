@@ -52,8 +52,8 @@ def metric_cosine(x1, x2):
 if __name__ == "__main__":
 
 
-    intra_dist = np.loadtxt('yitu_intra.txt')
-    extra_dist = np.loadtxt('yitu_extra.txt')
+    intra_dist = np.load('sensetime_intra.npy')
+    extra_dist = np.load('sensetime_extra.npy')
     show_accuracy(intra_dist, extra_dist)
 
     '''

@@ -1,6 +1,6 @@
 import sys
 import time
-sys.path.insert(0, '/home/zeng/dp-caffe/python')
+sys.path.insert(0, '/home/zeng/lconv-sfm-caffe/python')
 import numpy as np
 import caffe
 import argparse
@@ -43,7 +43,7 @@ def readDeepNet(trainNet_path, caffemodel_path):
     transformer.set_raw_scale('data', 255)  # the reference model operates on images in [0,255] range instead of [0,1]
     transformer.set_input_scale('data', 0.0078125)
     #transformer.set_input_scale('data', 0.003921)
-    transformer.set_channel_swap('data', (2, 1, 0))  # the reference model has channels in BGR order instead of RGB, if you are working on gray model, comment this line
+    #transformer.set_channel_swap('data', (2, 1, 0))  # the reference model has channels in BGR order instead of RGB, if you are working on gray model, comment this line
 
     return (net, transformer)
 
@@ -75,7 +75,10 @@ if __name__ == "__main__":
     for i in range(10):
         out = net.forward()
     end = time.clock()
+
+
+
     print('time consume is: %f s' % ((end - start)/10))
 
-    #feat = net.blobs[prob_name].data[0] # 'fc160' is the layer name in caffemodel, edit this arguments base on your own model
-    #print(feat)
+    feat = net.blobs[prob_name].data[0] # 'fc160' is the layer name in caffemodel, edit this arguments base on your own model
+    print(feat)

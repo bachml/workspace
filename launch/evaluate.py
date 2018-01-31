@@ -41,6 +41,16 @@ def metric_L2(x1,x2):
     ratio = -1 * z
     return float(ratio)
 
+def metric_cosine100(x1, x2):
+    x1.shape = (-1,1)
+    x2.shape = (-1,1)
+
+    ratio =np.dot(np.transpose(x1), x2) / ( np.sqrt(np.dot(np.transpose(x1),x1)) * np.sqrt(np.dot(np.transpose(x2),x2)) )
+    ratio = (ratio + 1)*50
+
+    return float(ratio)
+
+
 def metric_cosine(x1, x2):
     x1.shape = (-1,1)
     x2.shape = (-1,1)
@@ -73,9 +83,9 @@ if __name__ == "__main__":
         extraA = extra_feature[ [i], :]
         extraB = extra_feature[ [i+1], :]
         #sim = metric_BrayCurtis(A, B)
-        sim = metric_BrayCurtis(intraA, intraB)
+        sim = metric_cosine100(intraA, intraB)
         intra_dist = np.vstack((intra_dist, sim))
-        sim = metric_BrayCurtis(extraA, extraB)
+        sim = metric_cosine100(extraA, extraB)
         extra_dist = np.vstack((extra_dist, sim))
 
     show_accuracy(intra_dist, extra_dist)

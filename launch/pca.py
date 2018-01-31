@@ -89,12 +89,16 @@ if __name__ == "__main__":
     extra_feature = np.load( folder + task_name + '_extra.npy')
 
     feature = np.row_stack((intra_feature, extra_feature))
+    #feature = feature *10
 
     (x, new_base, meanVal) = pca_n(feature, int(embedding_dim))
 
 
     (pca_intra,xxx) = pca_base(intra_feature,  new_base, meanVal)
     (pca_extra,yyy) = pca_base(extra_feature,  new_base, meanVal)
+
+    pca_intra = np.real(pca_intra)
+    pca_extra = np.real(pca_extra)
 
 
     np.save(folder + 'pca_' + task_name + '_intra.npy', pca_intra)
