@@ -6,14 +6,17 @@ base_lr: 0.1
 lr_policy: "multistep"
 gamma: 0.1
 
-stepvalue: 16000
-stepvalue: 24000
+type: "RMSProp"
+
+
+stepvalue: 16
+stepvalue: 24
 stepvalue: 28000
 #stepvalue: 60000
 max_iter: 28000
 
-display: 100
-momentum: 0.9
+display: 4
+#momentum: 0.9
 weight_decay: 1e-4
 snapshot: 20000
 snapshot_prefix: "buffer_/inception-resnet_v1"

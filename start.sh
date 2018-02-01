@@ -3,8 +3,8 @@
 #task=WuNet_mobile
 #task=depthwise_test
 #task=deepid
-task=wfface
-#task=inception-resnet_v1
+#task=wfface
+task=inception-resnet_v1
 #task=senet50
 #task=wenet_force
 #task=sparse_Wen

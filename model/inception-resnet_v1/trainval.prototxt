@@ -16,7 +16,7 @@ layer {
  data_param {
    source: "/data/zeng/webface_160x160_train_lmdb"
    backend: LMDB
-   batch_size : 64
+   batch_size : 4
   }
 }
 layer {
@@ -37,7 +37,7 @@ layer {
  data_param {
    source: "/data/zeng/webface_160x160_val_lmdb"
    backend: LMDB
-   batch_size : 16
+   batch_size : 4
   }
 }
 layer {
