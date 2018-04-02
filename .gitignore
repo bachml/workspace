@@ -1,15 +1,6 @@
-buffer_/
-training_log_/
 project_/
-tools_/
-launch_/
-donot_delete_model_/
-task_/
 metric_results_/
-lowrank_lconv_/
-backup_/
-*.txt
+tools_/
 *.mat
 *.private
 *.caffemodel
-push.sh
